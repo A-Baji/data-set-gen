@@ -1,6 +1,7 @@
 import json
 import datetime
 import sys
+from urllib.parse import urlparse
 
 
 def gen_data_set(file, user, thought_time=10000):
@@ -12,7 +13,7 @@ def gen_data_set(file, user, thought_time=10000):
                     if msg['author']['name'] == user_dat[0] and msg['author']['discriminator'] == user_dat[1]]
         thought = ''
         for i, msg in enumerate(messages):
-            if msg['content']:
+            if msg['content'] and not (urlparse(msg['content']).scheme or urlparse(msg['content']).netloc):
                 if i == 0:
                     thought += msg['content']
                 if i > 0:
@@ -22,12 +23,17 @@ def gen_data_set(file, user, thought_time=10000):
                         msg['timestamp'])
                     differentiation = (curr_timestamp - prev_timestamp) / \
                         datetime.timedelta(milliseconds=1)
-                    if differentiation > thought_time:
-                        dataset.write(json.dumps(
-                            {'prompt': '', 'completion': thought}) + "\n")
+                    if differentiation > thought_time:  # If time between messages exceed `thought_time` milliseconds
+                        if len(thought.split(" ")) > 2:  # If the thought has more than two words
+                            dataset.write(json.dumps(
+                                {'prompt': '', 'completion': thought}) + "\n")
                         thought = msg['content']
                     else:
                         thought += f" {msg['content']}"
+                    # If it is the last message and the thought has more than two words
+                    if i == len(messages)-1 and len(thought.split(" ")) > 2:
+                        dataset.write(json.dumps(
+                            {'prompt': '', 'completion': thought}) + "\n")
     dataset.close()
 
 
