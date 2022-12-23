@@ -14,7 +14,7 @@ def gen_data_set(file, user, thought_time=10000):
         thought = ''
         for i, msg in enumerate(messages):
             msg['content'] = re.sub(
-                r'\b(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', '', msg['content'])
+                r'\b(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~|!:,.;]+[-A-Za-z0-9+&@#/%=~_|?.]+[-A-Za-z0-9+&@#/%=~_|?]', '', msg['content'])
             if msg['content']:
                 if i == 0:
                     thought += msg['content']
