@@ -1,7 +1,7 @@
 import json
 import datetime
 import sys
-from urllib.parse import urlparse
+import re
 
 
 def gen_data_set(file, user, thought_time=10000):
@@ -13,7 +13,9 @@ def gen_data_set(file, user, thought_time=10000):
                     if msg['author']['name'] == user_dat[0] and msg['author']['discriminator'] == user_dat[1]]
         thought = ''
         for i, msg in enumerate(messages):
-            if msg['content'] and not (urlparse(msg['content']).scheme or urlparse(msg['content']).netloc):
+            msg['content'] = re.sub(
+                r'\b(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', '', msg['content'])
+            if msg['content']:
                 if i == 0:
                     thought += msg['content']
                 if i > 0:
