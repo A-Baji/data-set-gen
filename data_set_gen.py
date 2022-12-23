@@ -17,7 +17,7 @@ def gen_data_set(file, user, thought_time=10000):
                 r'\b(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~|!:,.;]+[-A-Za-z0-9+&@#/%=~_|?.]+[-A-Za-z0-9+&@#/%=~_|?]', '', msg['content'])
             if msg['content']:
                 if i == 0:
-                    thought += msg['content']
+                    thought = msg['content']
                 if i > 0:
                     prev_timestamp = datetime.datetime.fromisoformat(
                         messages[i-1]['timestamp'])
@@ -28,14 +28,14 @@ def gen_data_set(file, user, thought_time=10000):
                     if differentiation > thought_time:  # If time between messages exceed `thought_time` milliseconds
                         if len(thought.split(" ")) > 2:  # If the thought has more than two words
                             dataset.write(json.dumps(
-                                {'prompt': '', 'completion': thought}) + "\n")
+                                {'prompt': '', 'completion': f"{thought if thought[-1] == '.' else thought + '.'}"}) + "\n")
                         thought = msg['content']
                     else:
                         thought += f" {msg['content']}"
                     # If it is the last message and the thought has more than two words
                     if i == len(messages)-1 and len(thought.split(" ")) > 2:
                         dataset.write(json.dumps(
-                            {'prompt': '', 'completion': thought}) + "\n")
+                            {'prompt': '', 'completion': f"{thought if thought[-1] == '.' else thought + '.'}"}) + "\n")
     dataset.close()
 
 
