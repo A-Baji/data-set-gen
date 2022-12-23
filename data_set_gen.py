@@ -5,7 +5,7 @@ import re
 
 
 def gen_data_set(file, user, thought_time=10000):
-    dataset = open(f'{user}_data_set.jsonl', 'w')
+    dataset = open(f'{file}_{user}_data_set.jsonl', 'w')
     user_dat = user.split('#')
     with open(file, 'r', encoding='utf-8') as data_file:
         data = json.load(data_file)
@@ -28,14 +28,14 @@ def gen_data_set(file, user, thought_time=10000):
                     if differentiation > thought_time:  # If time between messages exceed `thought_time` milliseconds
                         if len(thought.split(" ")) > 2:  # If the thought has more than two words
                             dataset.write(json.dumps(
-                                {'prompt': '', 'completion': f"{thought if thought[-1] == '.' else thought + '.'}"}) + "\n")
+                                {'prompt': '', 'completion': thought if thought[-1] == '.' else thought + '.'}) + "\n")
                         thought = msg['content']
                     else:
                         thought += f" {msg['content']}"
                     # If it is the last message and the thought has more than two words
                     if i == len(messages)-1 and len(thought.split(" ")) > 2:
                         dataset.write(json.dumps(
-                            {'prompt': '', 'completion': f"{thought if thought[-1] == '.' else thought + '.'}"}) + "\n")
+                            {'prompt': '', 'completion': thought if thought[-1] == '.' else thought + '.'}) + "\n")
     dataset.close()
 
 
