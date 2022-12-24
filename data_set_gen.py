@@ -8,8 +8,7 @@ def gen_data_set(channel, user, thought_time=10000):
     dataset = open(f'{sys.argv[1]}_{user}_data_set.jsonl', 'w')
     with open(f'{channel}_{user}_logs.json', 'r', encoding='utf-8') as data_file:
         data = json.load(data_file)
-        messages = [msg for msg in data['messages']
-                    if f"{msg['author']['name']}#{msg['author']['discriminator']}" == user]
+        messages = data['messages']
         thought = ''
         for i, msg in enumerate(messages):
             msg['content'] = re.sub(

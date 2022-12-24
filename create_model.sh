@@ -8,7 +8,7 @@
 echo "INFO: Exporting chat logs using DiscordChatExporter..."
 echo "INFO: This may take a few minutes to hours depending on the size of the discord channel"
 echo "INFO: Progress will NOT be saved if canceled"
-./DiscordChatExporter/DiscordChatExporter.Cli.exe export -c $1 -t $DISCORD_TOKEN -o "$1_$2_logs.json" -f Json --filter "from:$2"
+./DiscordChatExporter/DiscordChatExporter.Cli.exe export -c $1 -t $DISCORD_TOKEN -o "$1_$2_logs.json" -f Json --filter "from:'$2'"
 
 echo "INFO: Parsing chat logs into a openAI compatible dataset..."
 python3.11 data_set_gen.py $1 "$2"
