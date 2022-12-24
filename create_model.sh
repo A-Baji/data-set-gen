@@ -5,7 +5,7 @@
 # export OPENAI_API_KEY=<your openAI api key>
 # bash create_model.sh <channel id> <"discord_user#id"> <ada|babbage|curie|davinci|none <- skips model building> <clean|dirty <- keeps generated files>
 
-echo "INFO: Exporting chat logs..."
+echo "INFO: Exporting chat logs using DiscordChatExporter..."
 echo "INFO: This may take a few minutes to hours depending on the size of the discord channel"
 echo "INFO: Progress will NOT be saved if canceled"
 ./DiscordChatExporter/DiscordChatExporter.Cli.exe export -c $1 -t $DISCORD_TOKEN -o "$1_$2_logs.json" -f Json --filter "from:$2"
