@@ -1,0 +1,40 @@
+import sys
+
+
+def get_lines(file_name, N, method):
+    with open(file_name, "r") as f:
+        lines = f.readlines()
+    num_lines = len(lines)
+
+    if N > num_lines:
+        return lines
+
+    if method == 'first':
+        selected_lines = lines[:N]
+    elif method == 'last':
+        selected_lines = lines[-N:]
+    elif method == 'middle':
+        start = num_lines // 2 - N // 2
+        end = start + N
+        selected_lines = lines[start:end]
+    else:
+        step = num_lines // N
+        if num_lines % N != 0:
+            step += 1
+        start = 0
+        selected_lines = lines[start::step][:N]
+        while len(selected_lines) < N:
+            middle = num_lines // 2
+            start = middle - step // 2
+            if start in selected_lines:
+                start += 1
+            selected_lines += lines[start::step]
+        selected_lines = selected_lines[:N]
+
+    with open(file_name, "w") as f:
+        # Write the selected lines to the file
+        f.writelines(selected_lines)
+
+
+if __name__ == '__main__':
+    get_lines(sys.argv[1], int(sys.argv[2]), sys.argv[3])
