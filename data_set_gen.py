@@ -8,7 +8,8 @@ def gen_data_set(channel, user, thought_time=10000):
     dataset = open(f'{sys.argv[1]}_{user}_data_set.jsonl', 'w')
     with open(f'{channel}_{user}_logs.json', 'r', encoding='utf-8') as data_file:
         data = json.load(data_file)
-        messages = data['messages']
+        messages = [msg for msg in data['messages']
+                    if f"{msg['author']['name']}#{msg['author']['discriminator']}" == user]
         thought = ''
         for i, msg in enumerate(messages):
             msg['content'] = re.sub(
@@ -25,7 +26,7 @@ def gen_data_set(channel, user, thought_time=10000):
                     differentiation = (curr_timestamp - prev_timestamp) / \
                         datetime.timedelta(milliseconds=1)
                     if differentiation > thought_time:  # If time between messages exceed `thought_time` milliseconds
-                        if len(thought.split(" ")) > 3:  # If the thought has more than three words
+                        if len(thought.split(" ")) > 2:  # If the thought has more than three words
                             dataset.write(json.dumps(
                                 {'prompt': '', 'completion': f'{thought}###' if thought[-1] == '.' else f'{thought}.###'}) + "\n")
                         thought = msg['content'] if msg['content'][
@@ -33,7 +34,7 @@ def gen_data_set(channel, user, thought_time=10000):
                     else:
                         thought += f" {msg['content']}"
                     # If it is the last message and the thought has more than three words
-                    if i == len(messages)-1 and len(thought.split(" ")) > 3:
+                    if i == len(messages)-1 and len(thought.split(" ")) > 2:
                         dataset.write(json.dumps(
                             {'prompt': '', 'completion': f'{thought}###' if thought[-1] == '.' else f'{thought}.###'}) + "\n")
     dataset.close()
