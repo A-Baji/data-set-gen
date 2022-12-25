@@ -18,7 +18,7 @@ fi
 if [ ! -f "$1_$2_data_set.jsonl" ]
 then
     echo "INFO: Parsing chat logs into a openAI compatible dataset..."
-    python3.11 data_set_gen.py "$1_$2_logs.json" "$2" $3 $4
+    python3.11 gen_dataset.py "$1_$2_logs.json" "$2" $3 $4
     rm "$1_$2_data_set_prepared.jsonl"
 else
     echo "INFO: Dataset detected locally... Skipping parsing."
