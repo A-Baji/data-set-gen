@@ -7,7 +7,7 @@ def get_lines(file_name, N, method):
     num_lines = len(lines)
 
     if N > num_lines:
-        return lines
+        return
 
     if method == 'first':
         selected_lines = lines[:N]
