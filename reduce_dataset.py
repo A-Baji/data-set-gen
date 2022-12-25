@@ -18,9 +18,7 @@ def get_lines(file_name, N, method):
         end = start + N
         selected_lines = lines[start:end]
     else:
-        step = num_lines // N
-        if num_lines % N != 0:
-            step += 1
+        step = 5
         start = 0
         selected_lines = lines[start::step][:N]
         while len(selected_lines) < N:
@@ -29,6 +27,14 @@ def get_lines(file_name, N, method):
             if start in selected_lines:
                 start += 1
             selected_lines += lines[start::step]
+            selected_lines = list(set(selected_lines))
+        while len(selected_lines) < N:
+            middle = num_lines // 2
+            start = middle - step // 2
+            if start in selected_lines:
+                start += 1
+            selected_lines += lines[start-step:start+step+1:step]
+            selected_lines = list(set(selected_lines))
         selected_lines = selected_lines[:N]
 
     with open(file_name, "w") as f:
