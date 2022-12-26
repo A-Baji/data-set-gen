@@ -29,7 +29,7 @@ def gen_data_set(file, user, thought_time=10000):
                     if differentiation > thought_time:  # If time between messages exceed `thought_time` milliseconds
                         if len(thought.split(" ")) > 3:  # If the thought has more than three words
                             dataset.write(json.dumps(
-                                {'prompt': '', 'completion': f'{thought}' if thought[-1] == '.' else f'{thought}.'}) + "\n")
+                                {'prompt': '', 'completion': f'{thought}###' if thought[-1] == '.' else f'{thought}.###'}) + "\n")
                         thought = msg['content'] if msg['content'][
                             0] == ' ' else f" {msg['content']}"
                     else:
@@ -37,7 +37,7 @@ def gen_data_set(file, user, thought_time=10000):
                     # If it is the last message and the thought has more than three words
                     if i == len(messages)-1 and len(thought.split(" ")) > 3:
                         dataset.write(json.dumps(
-                            {'prompt': '', 'completion': f'{thought}' if thought[-1] == '.' else f'{thought}.'}) + "\n")
+                            {'prompt': '', 'completion': f'{thought}###' if thought[-1] == '.' else f'{thought}.###'}) + "\n")
     dataset.close()
 
 
