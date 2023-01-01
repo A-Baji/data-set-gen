@@ -1,6 +1,7 @@
 import argparse
 from discordai_modelizer import __version__ as version
 from discordai_modelizer import customize
+from discordai_modelizer import openai as openai_wrapper
 
 
 def discordai_modelizer():
@@ -93,6 +94,104 @@ def discordai_modelizer():
         help="A flag that can be set to redownload the discord chat logs: DEFAULT=False",
     )
 
+    openai_list_jobs = openai_subcommand.add_parser(
+        "list_jobs", description="Get a list of your openAI jobs"
+    )
+    openai_list_jobs.add_argument(
+        "-o", "--openai_key",
+        type=str,
+        dest='openai_key',
+        help="Your openAI API key",
+    )
+    openai_list_jobs.add_argument(
+        "--simple",
+        action='store_true',
+        required=False,
+        dest='simple',
+        help="Simplify the output to just the model name, job id, and status",
+    )
+
+    openai_list_models = openai_subcommand.add_parser(
+        "list_models", description="Get a list of your openAI models"
+    )
+    openai_list_models.add_argument(
+        "-o", "--openai_key",
+        type=str,
+        dest='openai_key',
+        help="Your openAI API key",
+    )
+    openai_list_models.add_argument(
+        "--simple",
+        action='store_true',
+        required=False,
+        dest='simple',
+        help="Simplify the output to just the model name, job id, and status",
+    )
+
+    openai_follow = openai_subcommand.add_parser(
+        "follow", description="Follow a custom openAI model job"
+    )
+    openai_follow.add_argument(
+        "-o", "--openai_key",
+        type=str,
+        dest='openai_key',
+        help="Your openAI API key",
+    )
+    openai_follow.add_argument(
+        "-i", "--job_id",
+        type=str,
+        dest='job_id',
+        help="Target job id",
+    )
+
+    openai_status = openai_subcommand.add_parser(
+        "status", description="Get the status of a custom openAI model job"
+    )
+    openai_status.add_argument(
+        "-o", "--openai_key",
+        type=str,
+        dest='openai_key',
+        help="Your openAI API key",
+    )
+    openai_status.add_argument(
+        "-i", "--job_id",
+        type=str,
+        dest='job_id',
+        help="Target job id",
+    )
+
+    openai_cancel = openai_subcommand.add_parser(
+        "cancel", description="Cancel a custom openAI model job"
+    )
+    openai_cancel.add_argument(
+        "-o", "--openai_key",
+        type=str,
+        dest='openai_key',
+        help="Your openAI API key",
+    )
+    openai_cancel.add_argument(
+        "-i", "--job_id",
+        type=str,
+        dest='job_id',
+        help="Target job id",
+    )
+
+    openai_delete = openai_subcommand.add_parser(
+        "delete", description="Delete a custom openAI model"
+    )
+    openai_delete.add_argument(
+        "-o", "--openai_key",
+        type=str,
+        dest='openai_key',
+        help="Your openAI API key",
+    )
+    openai_delete.add_argument(
+        "-i", "--model_id",
+        type=str,
+        dest='model_id',
+        help="Target model id",
+    )
+
     args = parser.parse_args()
     if args.command == "openai":
         if args.subcommand == "create":
@@ -100,6 +199,18 @@ def discordai_modelizer():
                                    thought_time=args.thought_time, max_entry_count=args.max_entries,
                                    reduce_mode=args.reduce_mode, base_model=args.base_model, clean=args.clean,
                                    redownload=args.redownload)
+        if args.subcommand == "list_jobs":
+            openai_wrapper.list_jobs(args.openai_key, args.simple)
+        if args.subcommand == "list_models":
+            openai_wrapper.list_models(args.openai_key, args.simple)
+        if args.subcommand == "follow":
+            openai_wrapper.follow_job(args.openai_key, args.job_id)
+        if args.subcommand == "status":
+            openai_wrapper.get_status(args.openai_key, args.job_id)
+        if args.subcommand == "cancel":
+            openai_wrapper.cancel_job(args.openai_key, args.job_id)
+        if args.subcommand == "delete":
+            openai_wrapper.delete_model(args.openai_key, args.model_id)
 
 
 if __name__ == "__main__":
