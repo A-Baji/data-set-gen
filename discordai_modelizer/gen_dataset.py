@@ -3,7 +3,7 @@ import datetime
 import re
 
 
-def parse_logs(file: str, user: str, thought_time=10000):
+def parse_logs(file: str, user: str, thought_time=10):
     dataset = open(
         f"{file.split('_')[0]}_{user}_data_set.jsonl", 'w')
     with open(file, 'r', encoding='utf-8') as data_file:
@@ -26,7 +26,7 @@ def parse_logs(file: str, user: str, thought_time=10000):
                         msg['timestamp'])
                     differentiation = (curr_timestamp - prev_timestamp) / \
                         datetime.timedelta(milliseconds=1)
-                    if differentiation > thought_time:  # If time between messages exceed `thought_time` milliseconds
+                    if differentiation > thought_time*1000:  # If time between messages exceed `thought_time` milliseconds
                         if len(thought.split(" ")) > 3:  # If the thought has more than three words
                             dataset.write(
                                 json.dumps(
@@ -62,24 +62,17 @@ def get_lines(file_name, N, method):
         end = start + N
         selected_lines = lines[start:end]
     else:
-        step = 5
-        start = 0
-        selected_lines = lines[start::step][:N]
+        if method != 'even':
+            print("Invalid reduce method... Defaulting to even mode.")
+        interval = num_lines // N
+        selected_lines = []
+        for i in range(N):
+            selected_lines.append(lines[i * interval])
+        start = num_lines
         while len(selected_lines) < N:
-            middle = num_lines // 2
-            start = middle - step // 2
-            if start in selected_lines:
-                start += 1
-            selected_lines += lines[start::step]
-            selected_lines = list(set(selected_lines))
-        while len(selected_lines) < N:
-            middle = num_lines // 2
-            start = middle - step // 2
-            if start in selected_lines:
-                start += 1
-            selected_lines += lines[start-step:start+step+1:step]
-            selected_lines = list(set(selected_lines))
-        selected_lines = selected_lines[:N]
+            end = start + N - len(selected_lines)
+            selected_lines += lines[:end]
+            start = 1
 
     with open(file_name, "w") as f:
         f.writelines(selected_lines)
