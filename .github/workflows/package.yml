@@ -23,10 +23,9 @@ jobs:
       with:
         python-version: ${{matrix.py_ver}}
     - name: Install Package
-      run: |
-        ls -la
-        cd discordai_modelizer
-        ls -la
+      run: pip install .
+    - name: Test Package
+      run: discordai_modelizer -V
   release:
     if: |
       github.event_name == 'push' &&
