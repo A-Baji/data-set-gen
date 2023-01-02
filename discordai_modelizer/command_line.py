@@ -138,7 +138,7 @@ def discordai_modelizer():
         help="Your openAI API key",
     )
     openai_follow.add_argument(
-        "-i", "--job_id",
+        "-j", "--job_id",
         type=str,
         dest='job_id',
         help="Target job id",
@@ -154,7 +154,7 @@ def discordai_modelizer():
         help="Your openAI API key",
     )
     openai_status.add_argument(
-        "-i", "--job_id",
+        "-j", "--job_id",
         type=str,
         dest='job_id',
         help="Target job id",
@@ -170,7 +170,7 @@ def discordai_modelizer():
         help="Your openAI API key",
     )
     openai_cancel.add_argument(
-        "-i", "--job_id",
+        "-j", "--job_id",
         type=str,
         dest='job_id',
         help="Target job id",
@@ -186,7 +186,7 @@ def discordai_modelizer():
         help="Your openAI API key",
     )
     openai_delete.add_argument(
-        "-i", "--model_id",
+        "-m", "--model_id",
         type=str,
         dest='model_id',
         help="Target model id",

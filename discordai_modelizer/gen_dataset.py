@@ -1,11 +1,13 @@
 import json
 import datetime
 import re
+import appdirs
 
 
 def parse_logs(file: str, user: str, thought_time=10):
+    files_path = appdirs.user_data_dir(appauthor="Adib Baji", appname="discordai")
     dataset = open(
-        f"{file.split('_')[0]}_{user}_data_set.jsonl", 'w')
+        f"{files_path}/{file.split(files_path+'/')[1].split('_')[0]}_{user}_data_set.jsonl", 'w')
     with open(file, 'r', encoding='utf-8') as data_file:
         data = json.load(data_file)
         messages = [msg for msg in data['messages']
