@@ -4,8 +4,10 @@ DiscordAI Modelizer is a python package that can generate custom openai models b
 DiscordAI Modelizer is primarily used as a subcomponent of [DiscordAI](https://github.com/A-Baji/discordAI), but may also be used independently.
 
 ## Installation
+`pip install -U git+https://github.com/A-Baji/discordAI-modelizer.git`
+### Or
 1. Download/clone the source locally
-2. Run `pip install <path to source>/.`
+2. Run `pip install -U <path to source>/.`
 3. The source may now be deleted
 
 ## Commands
@@ -25,6 +27,6 @@ This command will cancel a specified customization job.
 This command will delete a specified customized model.
 
 ## Disclaimer
-This application allows users to download the chat history of any channel for which they have permission to invite a bot. It is important to note that this application should only be used with the consent of all members of the channel. Using this application for malicious purposes or without the consent of all members is strictly prohibited.
+This application allows users to download the chat history of any channel for which they have permission to invite a bot, and then use those logs to create an openai model based on a user's chat messages. It is important to note that this application should only be used with the consent of all members of the channel. Using this application for malicious purposes, such as impersonation, or without the consent of all members is strictly prohibited.
 
-By using this application, you agree to use it responsibly and in accordance with all applicable laws and regulations. The developers of this application are not responsible for any improper use of the application or any consequences resulting from such use. We strongly discourage using this application for any unethical purposes.
+By using this application, you agree to use it responsibly. The developers of this application are not responsible for any improper use of the application or any consequences resulting from such use. We strongly discourage using this application for any unethical purposes.
