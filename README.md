@@ -11,19 +11,19 @@ DiscordAI Modelizer is primarily used as a subcomponent of [DiscordAI](https://g
 3. The source may now be deleted
 
 ## Commands
-### `discord_modelizer openai create`
+### `discordai_modelizer openai create`
 This command will download the specified chat logs, parse them into a usable dataset, then create a customized model using openai.
-### `discord_modelizer openai list_jobs`
+### `discordai_modelizer openai list_jobs`
 This command will list all of the openai customization jobs associated with a specified api key.
-### `discord_modelizer openai list_models`
+### `discordai_modelizer openai list_models`
 This command will list all of the openai customized models associated with a specified api key.
-### `discord_modelizer openai follow`
+### `discordai_modelizer openai follow`
 This command will output the event stream of a specified customization job process.
-### `discord_modelizer openai status`
+### `discordai_modelizer openai status`
 This command will output the status of a specified customization job.
-### `discord_modelizer openai cancel`
+### `discordai_modelizer openai cancel`
 This command will cancel a specified customization job.
-### `discord_modelizer openai delete`
+### `discordai_modelizer openai delete`
 This command will delete a specified customized model.
 
 ## Disclaimer
