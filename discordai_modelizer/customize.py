@@ -2,8 +2,6 @@ import os
 import subprocess
 import appdirs
 import shutil
-import sys
-from pkg_resources import resource_filename
 
 from discordai_modelizer import __name__ as pkg_name
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
@@ -21,14 +19,9 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print("INFO: This may take a few minutes to hours depending on the message count of the channel")
         print("INFO: Progress will NOT be saved if cancelled")
         print("--------------------------DiscordChatExporter---------------------------")
-        try:
-            # If running as an executable, use the extracted package data
-            DiscordChatExporter = os.path.join(sys._MEIPASS, 'discordai_modelizer',
-                                               'DiscordChatExporter', 'DiscordChatExporter.Cli.exe')
-        except AttributeError:
-            # If running as a Python package, use pkg_resources to locate the file
-            DiscordChatExporter = resource_filename(
-                'discordai_modelizer', 'DiscordChatExporter/DiscordChatExporter.Cli.exe')
+        DiscordChatExporter = os.path.join(
+            os.path.dirname(__file__),
+            'DiscordChatExporter', 'DiscordChatExporter.Cli.exe')
         subprocess.run([
             DiscordChatExporter,
             "export",
