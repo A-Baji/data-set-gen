@@ -3,7 +3,6 @@ import subprocess
 import appdirs
 import shutil
 
-from discordai_modelizer import __name__ as pkg_name
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 
