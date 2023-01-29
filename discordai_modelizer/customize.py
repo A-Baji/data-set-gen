@@ -13,7 +13,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
     files_path = appdirs.user_data_dir(appauthor="Adib Baji", appname="discordai")
 
     # Download logs
-    if not os.path.isfile(f"{files_path}/{channel_user}_logs.json") or redownload:
+    if not os.path.isfile(f"{files_path}/{channel_id}_logs.json") or redownload:
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print("INFO: This may take a few minutes to hours depending on the message count of the channel")
         print("INFO: Progress will NOT be saved if cancelled")
@@ -26,19 +26,18 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
             "export",
             "-c", channel_id,
             "-t", bot_token,
-            "-o", f"{channel_user}_logs.json",
-            "-f", "Json",
-            "--filter", f"from:'{user_id}'"
+            "-o", f"{channel_id}_logs.json",
+            "-f", "Json"
         ])
         print("--------------------------DiscordChatExporter---------------------------")
-        shutil.move(f"{channel_user}_logs.json", f"{files_path}/{channel_user}_logs.json")
-        print(f"INFO: Logs saved to {files_path}/{channel_user}_logs.json")
+        shutil.move(f"{channel_id}_logs.json", f"{files_path}/{channel_id}_logs.json")
+        print(f"INFO: Logs saved to {files_path}/{channel_id}_logs.json")
     else:
-        print(f"INFO: Chat logs detected locally at {files_path}/{channel_user}_logs.json... Skipping download.")
+        print(f"INFO: Chat logs detected locally at {files_path}/{channel_id}_logs.json... Skipping download.")
 
     # Parse logs
     print("INFO: Parsing chat logs into a openAI compatible dataset...")
-    parse_logs(f"{files_path}/{channel_user}_logs.json", user_id, thought_time)
+    parse_logs(f"{files_path}/{channel_id}_logs.json", user_id, thought_time)
 
     # Prepare and reduce dataset
     print("INFO: Cleaning up generated dataset...")
