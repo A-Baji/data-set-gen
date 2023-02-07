@@ -3,12 +3,13 @@ from re import sub
 from json import load, dumps
 from datetime import timedelta
 from dateutil import parser
+from os import path
 
 
 def parse_logs(file: str, user: str, thought_time=10):
-    files_path = user_data_dir(appauthor="Adib Baji", appname="discordai")
+    files_path = user_data_dir(appname="discordai")
     dataset = open(
-        f"{files_path}/{file.split(files_path+'/')[1].split('_')[0]}_{user}_data_set.jsonl", 'w')
+        path.join(files_path, f"{file.split(files_path+path.sep)[1].split('_')[0]}_{user}_data_set.jsonl"), 'w')
     with open(file, 'r', encoding='utf-8') as data_file:
         data = load(data_file)
         messages = [msg for msg in data['messages']
