@@ -31,9 +31,9 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         ])
         print("--------------------------DiscordChatExporter---------------------------")
         shutil.move(f"{channel_id}_logs.json", os.path.join(files_path,f"{channel_id}_logs.json"))
-        print(f"INFO: Logs saved to {os.path.join(files_path,f"{channel_id}_logs.json")}")
+        print(f"INFO: Logs saved to {os.path.join(files_path,f'{channel_id}_logs.json')}")
     else:
-        print(f"INFO: Chat logs detected locally at {os.path.join(files_path,f"{channel_id}_logs.json")}... Skipping download.")
+        print(f"INFO: Chat logs detected locally at {os.path.join(files_path,f'{channel_id}_logs.json')}... Skipping download.")
 
     # Parse logs
     print("INFO: Parsing chat logs into a openAI compatible dataset...")
