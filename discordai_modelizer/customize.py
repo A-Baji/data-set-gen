@@ -48,8 +48,19 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
     except FileNotFoundError:
         pass
     subprocess.run([
-        f"openai tools fine_tunes.prepare_data -f '{full_dataset_path}' -q"
-    ], shell=True)
+        "ls", "-la", "~/"
+    ])
+    subprocess.run([
+        "ls", "-la", "C:\\Users\\adib\\AppData\\Local"
+    ])
+    subprocess.run([
+        "ls", "-la", files_path
+    ])
+    subprocess.run([
+        "openai", "tools", "fine_tunes.prepare_data",
+        "-f", full_dataset_path,
+        "-q"
+    ])
     if os.path.isfile(full_prepped_dataset_path):
         get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
     else:
