@@ -4,6 +4,8 @@ import appdirs
 import shutil
 import pathlib
 
+import openai
+
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 
@@ -67,25 +69,25 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print("nope3")
     try:
         subprocess.run([
-            "cmd", "/c", "ls", "~/"
+            "powershell", "-command", "ls", "~/"
         ])
     except FileNotFoundError:
         print("nope4")
     try:
         subprocess.run([
-            "cmd", "/c", "ls", "C:\\Users\\adib\\AppData\\Local"
+            "powershell", "-command", "ls", "C:\\Users\\adib\\AppData\\Local"
         ])
     except FileNotFoundError:
         print("nope5")
     try:
         subprocess.run([
-            "cmd", "/c", "ls", files_path
+            "powershell", "-command", "ls", files_path
         ])
     except FileNotFoundError:
         print("nope6")
     try:
         subprocess.run([
-            "cmd", "/c", "openai", "tools", "fine_tunes.prepare_data",
+            "powershell", "-command", "openai", "tools", "fine_tunes.prepare_data",
             "-f", full_dataset_path,
             "-q"
         ])
