@@ -47,29 +47,50 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         os.remove(full_prepped_dataset_path)
     except FileNotFoundError:
         pass
-    subprocess.run([
-        "ls"
-    ])
-    subprocess.run([
-        "openai", "-v"
-    ])
-    subprocess.run([
-        "ls"
-    ], shell=True)
-    subprocess.run([
-        "cmd", "/c", "ls", "~/"
-    ])
-    subprocess.run([
-        "cmd", "/c", "ls", "C:\\Users\\adib\\AppData\\Local"
-    ])
-    subprocess.run([
-        "cmd", "/c", "ls", files_path
-    ])
-    subprocess.run([
-        "cmd", "/c", "openai", "tools", "fine_tunes.prepare_data",
-        "-f", full_dataset_path,
-        "-q"
-    ])
+    try:
+        subprocess.run([
+            "ls"
+        ])
+    except FileNotFoundError:
+        print("nope1")
+    try:
+        subprocess.run([
+            "openai", "-v"
+        ])
+    except FileNotFoundError:
+        print("nope2")
+    try:
+        subprocess.run([
+            "ls"
+        ], shell=True)
+    except FileNotFoundError:
+        print("nope3")
+    try:
+        subprocess.run([
+            "cmd", "/c", "ls", "~/"
+        ])
+    except FileNotFoundError:
+        print("nope4")
+    try:
+        subprocess.run([
+            "cmd", "/c", "ls", "C:\\Users\\adib\\AppData\\Local"
+        ])
+    except FileNotFoundError:
+        print("nope5")
+    try:
+        subprocess.run([
+            "cmd", "/c", "ls", files_path
+        ])
+    except FileNotFoundError:
+        print("nope6")
+    try:
+        subprocess.run([
+            "cmd", "/c", "openai", "tools", "fine_tunes.prepare_data",
+            "-f", full_dataset_path,
+            "-q"
+        ])
+    except FileNotFoundError:
+        print("nope7")
     if os.path.isfile(full_prepped_dataset_path):
         get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
     else:
