@@ -53,13 +53,13 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
 
     try:
         subprocess.run([
-            "powershell", "-command", "ls", sys._MEIPASS
+            "powershell", "-command", "ls", pathlib.Path(sys._MEIPASS) / "openai"
         ])
     except Exception as e:
         print("nope1", e)
     try:
         subprocess.run([
-            "openai", "tools", "fine_tunes.prepare_data",
+            pathlib.Path(sys._MEIPASS) / "openai"/ "openai.exe", "tools", "fine_tunes.prepare_data",
             "-f", full_dataset_path,
             "-q"
         ])
