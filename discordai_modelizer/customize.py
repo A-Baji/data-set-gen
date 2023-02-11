@@ -2,6 +2,7 @@ import os
 import subprocess
 import appdirs
 import shutil
+import pathlib
 
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
@@ -10,17 +11,18 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
                  max_entry_count=1000, reduce_mode="even", base_model="none", clean=False, redownload=False):
     os.environ["OPENAI_API_KEY"] = openai_key
     channel_user = f"{channel_id}_{user_id}"
-    files_path = appdirs.user_data_dir(appname="discordai")
+    files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
+    full_logs_path = files_path / f"{channel_id}_logs.json"
+    full_dataset_path = files_path / f"{channel_user}_data_set.jsonl"
+    full_prepped_dataset_path = files_path / f"{channel_user}_data_set_prepared.jsonl"
 
     # Download logs
-    if not os.path.isfile(os.path.join(files_path,f"{channel_id}_logs.json")) or redownload:
+    if not os.path.isfile(full_logs_path) or redownload:
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print("INFO: This may take a few minutes to hours depending on the message count of the channel")
         print("INFO: Progress will NOT be saved if cancelled")
         print("--------------------------DiscordChatExporter---------------------------")
-        DiscordChatExporter = os.path.join(
-            os.path.dirname(__file__),
-            'DiscordChatExporter', 'DiscordChatExporter.Cli.exe')
+        DiscordChatExporter = pathlib.Path(os.path.dirname(__file__)) / 'DiscordChatExporter'/ 'DiscordChatExporter.Cli.exe'
         subprocess.run([
             DiscordChatExporter,
             "export",
@@ -30,39 +32,39 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
             "-f", "Json"
         ])
         print("--------------------------DiscordChatExporter---------------------------")
-        shutil.move(f"{channel_id}_logs.json", os.path.join(files_path,f"{channel_id}_logs.json"))
-        print(f"INFO: Logs saved to {os.path.join(files_path,f'{channel_id}_logs.json')}")
+        shutil.move(f"{channel_id}_logs.json", full_logs_path)
+        print(f"INFO: Logs saved to {full_logs_path}")
     else:
-        print(f"INFO: Chat logs detected locally at {os.path.join(files_path,f'{channel_id}_logs.json')}... Skipping download.")
+        print(f"INFO: Chat logs detected locally at {full_logs_path}... Skipping download.")
 
     # Parse logs
-    print("INFO: Parsing chat logs into a openAI compatible dataset...")
-    parse_logs(os.path.join(files_path,f"{channel_id}_logs.json"), user_id, thought_time)
+    print("INFO: Parsing chat logs into an openAI compatible dataset...")
+    parse_logs(full_logs_path, channel_id, user_id, thought_time)
 
     # Prepare and reduce dataset
     print("INFO: Cleaning up generated dataset...")
     try:
-        os.remove(os.path.join(files_path,f"{channel_user}_data_set_prepared.jsonl"))
+        os.remove(full_prepped_dataset_path)
     except FileNotFoundError:
         pass
     subprocess.run([
         "openai", "tools", "fine_tunes.prepare_data",
-        "-f", os.path.join(files_path,f"{channel_user}_data_set.jsonl"),
+        "-f", full_dataset_path,
         "-q"
     ])
-    if os.path.isfile(os.path.join(files_path,f"{channel_user}_data_set_prepared.jsonl")):
-        get_lines(os.path.join(files_path,f"{channel_user}_data_set_prepared.jsonl"), max_entry_count, reduce_mode)
+    if os.path.isfile(full_prepped_dataset_path):
+        get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
     else:
-        get_lines(os.path.join(files_path,f"{channel_user}_data_set.jsonl"), max_entry_count, reduce_mode)
+        get_lines(full_dataset_path, max_entry_count, reduce_mode)
 
     # Train customized openAI model
     if base_model in ["davinci", "curie", "babbage", "ada"]:
         print("INFO: Training customized openAI model...")
         print("INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model")
-        if os.path.isfile(os.path.join(files_path,f"{channel_user}_data_set_prepared.jsonl")):
+        if os.path.isfile(full_prepped_dataset_path):
             subprocess.run([
                 "openai", "api", "fine_tunes.create",
-                "-t", os.path.join(files_path,f"{channel_user}_data_set_prepared.jsonl"),
+                "-t", full_prepped_dataset_path,
                 "-m", base_model,
                 "--suffix", user_id,
                 "--no_check_if_files_exist"
@@ -70,7 +72,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         else:
             subprocess.run([
                 "openai", "api", "fine_tunes.create",
-                "-t", os.path.join(files_path,f"{channel_user}_data_set.jsonl"),
+                "-t", full_dataset_path,
                 "-m", base_model,
                 "--suffix", user_id,
                 "--no_check_if_files_exist"
@@ -81,7 +83,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
     # Clean up generated files
     if clean:
         try:
-            os.remove(os.path.join(files_path,f"{channel_user}_data_set.jsonl"))
-            os.remove(os.path.join(files_path,f"{channel_user}_data_set_prepared.jsonl"))
+            os.remove(full_dataset_path)
+            os.remove(full_prepped_dataset_path)
         except FileNotFoundError:
             pass
