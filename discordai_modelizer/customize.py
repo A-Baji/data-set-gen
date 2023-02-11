@@ -30,7 +30,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
             "-t", bot_token,
             "-o", f"{channel_id}_logs.json",
             "-f", "Json"
-        ])
+        ], shell=True)
         print("--------------------------DiscordChatExporter---------------------------")
         shutil.move(f"{channel_id}_logs.json", full_logs_path)
         print(f"INFO: Logs saved to {full_logs_path}")
