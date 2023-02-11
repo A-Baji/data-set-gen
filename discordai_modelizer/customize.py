@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 import appdirs
 import shutil
 import pathlib
@@ -49,26 +50,22 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         os.remove(full_prepped_dataset_path)
     except FileNotFoundError:
         pass
+
     try:
         subprocess.run([
-            "powershell", "-command", "openai", "-v"
+            "powershell", "-command", "ls", sys._MEIPASS
         ])
-    except:
-        print("nope1")
+    except Exception as e:
+        print("nope1", e)
     try:
         subprocess.run([
-            "openai", "-v"
-        ])
-    except:
-        print("nope2")
-    try:
-        subprocess.run([
-            "powershell", "-command", "openai", "tools", "fine_tunes.prepare_data",
+            "openai", "tools", "fine_tunes.prepare_data",
             "-f", full_dataset_path,
             "-q"
         ])
-    except:
-        print("nope3")
+    except Exception as e:
+        print("nope2", e)
+
     if os.path.isfile(full_prepped_dataset_path):
         get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
     else:
