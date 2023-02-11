@@ -51,48 +51,24 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         pass
     try:
         subprocess.run([
-            "ls"
+            "powershell", "-command", "openai", "-v"
         ])
-    except FileNotFoundError:
+    except:
         print("nope1")
     try:
         subprocess.run([
             "openai", "-v"
         ])
-    except FileNotFoundError:
+    except:
         print("nope2")
-    try:
-        subprocess.run([
-            "ls"
-        ], shell=True)
-    except FileNotFoundError:
-        print("nope3")
-    try:
-        subprocess.run([
-            "powershell", "-command", "ls", "~/"
-        ])
-    except FileNotFoundError:
-        print("nope4")
-    try:
-        subprocess.run([
-            "powershell", "-command", "ls", "C:\\Users\\adib\\AppData\\Local"
-        ])
-    except FileNotFoundError:
-        print("nope5")
-    try:
-        subprocess.run([
-            "powershell", "-command", "ls", files_path
-        ])
-    except FileNotFoundError:
-        print("nope6")
     try:
         subprocess.run([
             "powershell", "-command", "openai", "tools", "fine_tunes.prepare_data",
             "-f", full_dataset_path,
             "-q"
         ])
-    except FileNotFoundError:
-        print("nope7")
+    except:
+        print("nope3")
     if os.path.isfile(full_prepped_dataset_path):
         get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
     else:
