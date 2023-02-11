@@ -50,13 +50,6 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         os.remove(full_prepped_dataset_path)
     except FileNotFoundError:
         pass
-
-    try:
-        subprocess.run([
-            "powershell", "-command", "ls", pathlib.Path(sys._MEIPASS) / "openai"
-        ])
-    except Exception as e:
-        print("nope1", e)
     try:
         subprocess.run([
             "python", pathlib.Path(sys._MEIPASS) / "openai"/ "cli.py", "tools", "fine_tunes.prepare_data",
@@ -65,7 +58,6 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         ])
     except Exception as e:
         print("nope2", e)
-
     if os.path.isfile(full_prepped_dataset_path):
         get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
     else:
