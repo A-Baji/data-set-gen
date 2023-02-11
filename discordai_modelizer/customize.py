@@ -48,13 +48,22 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
     except FileNotFoundError:
         pass
     subprocess.run([
-        "cmd", "/c", "ls", "-la", "~/"
+        "ls"
     ])
     subprocess.run([
-        "cmd", "/c", "ls", "-la", "C:\\Users\\adib\\AppData\\Local"
+        "openai", "-v"
     ])
     subprocess.run([
-        "cmd", "/c", "ls", "-la", files_path
+        "ls"
+    ], shell=True)
+    subprocess.run([
+        "cmd", "/c", "ls", "~/"
+    ])
+    subprocess.run([
+        "cmd", "/c", "ls", "C:\\Users\\adib\\AppData\\Local"
+    ])
+    subprocess.run([
+        "cmd", "/c", "ls", files_path
     ])
     subprocess.run([
         "cmd", "/c", "openai", "tools", "fine_tunes.prepare_data",
