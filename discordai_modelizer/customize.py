@@ -59,7 +59,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print("nope1", e)
     try:
         subprocess.run([
-            pathlib.Path(sys._MEIPASS) / "openai"/ "openai.exe", "tools", "fine_tunes.prepare_data",
+            "python", pathlib.Path(sys._MEIPASS) / "openai"/ "cli.py", "tools", "fine_tunes.prepare_data",
             "-f", full_dataset_path,
             "-q"
         ])
