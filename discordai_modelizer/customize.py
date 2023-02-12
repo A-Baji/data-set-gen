@@ -1,11 +1,8 @@
 import os
 import subprocess
-import sys
 import appdirs
 import shutil
 import pathlib
-
-import openai
 
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
@@ -50,14 +47,11 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         os.remove(full_prepped_dataset_path)
     except FileNotFoundError:
         pass
-    try:
-        subprocess.run([
-            "python", pathlib.Path(sys._MEIPASS) / "openai"/ "cli.py", "tools", "fine_tunes.prepare_data",
-            "-f", full_dataset_path,
-            "-q"
-        ])
-    except Exception as e:
-        print("nope2", e)
+    subprocess.run([
+        "openai", "tools", "fine_tunes.prepare_data",
+        "-f", full_dataset_path,
+        "-q"
+    ])
     if os.path.isfile(full_prepped_dataset_path):
         get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
     else:
