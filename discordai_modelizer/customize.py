@@ -47,13 +47,11 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         os.remove(full_prepped_dataset_path)
     except FileNotFoundError:
         pass
-    print(full_dataset_path)
     subprocess.run([
-        "ls", "-la", files_path
+        "openai", "tools", "fine_tunes.prepare_data",
+        "-f", full_dataset_path,
+        "-q"
     ])
-    subprocess.run([
-        f"openai tools fine_tunes.prepare_data -f \"{full_dataset_path}\" -q"
-    ], shell=True)
     if os.path.isfile(full_prepped_dataset_path):
         get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
     else:
