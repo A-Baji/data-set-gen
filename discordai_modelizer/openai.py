@@ -40,7 +40,7 @@ def follow_job(openai_key: str, job_id: str):
             "-i", job_id
         ])
     except FileNotFoundError:
-        print("You must have the `openai` python package installed to use this command.")
+        print("ERROR: You must have the `openai` python package installed to use this command.")
 
 
 def get_status(openai_key: str, job_id: str):
