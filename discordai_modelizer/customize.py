@@ -53,7 +53,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print(f"INFO: Fine tune job id: {fine_tune.id}")
         print("INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model")
         print("INFO: Use the `job status` command to check on the status of job process") 
-        print("INFO: If you have the `openai` python package installed, you can instead use the `job follow` command to follow the event stream of the job.")
+        print("INFO: If you are using the python package, or have the `openai` python package installed, you can instead use the `job follow` command to follow the event stream of the job.")
     elif base_model == "none":
         print("INFO: No base model selected... Skipping training.")
 
