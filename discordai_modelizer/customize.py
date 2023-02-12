@@ -44,16 +44,16 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
     # Train customized openAI model
     if base_model in ["davinci", "curie", "babbage", "ada"]:
         print("INFO: Training customized openAI model...")
-        print("INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model")
         upload_response = openai.File.create(api_key=openai_key,
             file=open(full_dataset_path, "rb"),
             purpose='fine-tune'
         )
         file_id = upload_response.id
         fine_tune=openai.FineTune.create(api_key=openai_key, training_file=file_id, model=base_model, suffix=user_id)
-        print(f"INFO: Fine tune job id: \033[1m\033[93m{fine_tune.id}\033[0m")
-        print("INFO: Use the \033[1m`job status`\033[0m command to check on the status of job process") 
-        print("INFO: If you have the `openai` python package installed, you can instead use the \033[1m`job follow`\033[0m command to follow the event stream of the job.")
+        print(f"INFO: Fine tune job id: {fine_tune.id}")
+        print("INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model")
+        print("INFO: Use the `job status` command to check on the status of job process") 
+        print("INFO: If you have the `openai` python package installed, you can instead use the `job follow` command to follow the event stream of the job.")
     elif base_model == "none":
         print("INFO: No base model selected... Skipping training.")
 
