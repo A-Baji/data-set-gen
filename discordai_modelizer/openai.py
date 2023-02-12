@@ -34,10 +34,13 @@ def list_models(openai_key: str, simple=False):
 
 def follow_job(openai_key: str, job_id: str):
     os.environ["OPENAI_API_KEY"] = openai_key
-    subprocess.run([
-        "openai", "api", "fine_tunes.follow",
-        "-i", job_id
-    ])
+    try:
+        subprocess.run([
+            "openai", "api", "fine_tunes.follow",
+            "-i", job_id
+        ])
+    except FileNotFoundError:
+        print("You must have the `openai` python package installed to use this command.")
 
 
 def get_status(openai_key: str, job_id: str):
