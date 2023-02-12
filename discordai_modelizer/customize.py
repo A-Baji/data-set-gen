@@ -40,6 +40,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
     # Parse logs
     print("INFO: Parsing chat logs into an openAI compatible dataset...")
     parse_logs(full_logs_path, channel_id, user_id, thought_time)
+    get_lines(full_dataset_path, max_entry_count, reduce_mode)
 
     # Train customized openAI model
     if base_model in ["davinci", "curie", "babbage", "ada"]:
