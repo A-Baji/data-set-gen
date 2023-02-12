@@ -4,6 +4,7 @@ import appdirs
 import shutil
 import pathlib
 
+import openai
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 
@@ -41,42 +42,21 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
     print("INFO: Parsing chat logs into an openAI compatible dataset...")
     parse_logs(full_logs_path, channel_id, user_id, thought_time)
 
-    # Prepare and reduce dataset
-    print("INFO: Cleaning up generated dataset...")
-    try:
-        os.remove(full_prepped_dataset_path)
-    except FileNotFoundError:
-        pass
-    subprocess.run([
-        "openai", "tools", "fine_tunes.prepare_data",
-        "-f", full_dataset_path,
-        "-q"
-    ])
-    if os.path.isfile(full_prepped_dataset_path):
-        get_lines(full_prepped_dataset_path, max_entry_count, reduce_mode)
-    else:
-        get_lines(full_dataset_path, max_entry_count, reduce_mode)
-
     # Train customized openAI model
     if base_model in ["davinci", "curie", "babbage", "ada"]:
         print("INFO: Training customized openAI model...")
         print("INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model")
-        if os.path.isfile(full_prepped_dataset_path):
-            subprocess.run([
-                "openai", "api", "fine_tunes.create",
-                "-t", full_prepped_dataset_path,
-                "-m", base_model,
-                "--suffix", user_id,
-                "--no_check_if_files_exist"
-            ])
-        else:
-            subprocess.run([
-                "openai", "api", "fine_tunes.create",
-                "-t", full_dataset_path,
-                "-m", base_model,
-                "--suffix", user_id,
-                "--no_check_if_files_exist"
-            ])
+        upload_response = openai.File.create(api_key=openai_key,
+            file=open(full_prepped_dataset_path
+                      if os.path.isfile(full_prepped_dataset_path)
+                      else full_dataset_path, "rb"),
+            purpose='fine-tune'
+        )
+        file_id = upload_response.id
+        fine_tune=openai.FineTune.create(api_key=openai_key, training_file=file_id, model=base_model, suffix=user_id)
+        print(f"INFO: Fine tune job id: {fine_tune.id}")
+        print("INFO: Use the `job status` command to check on the status of job process") 
+        print("INFO: If you have the `openai` python package installed, you can also use the `job follow` command to follow the event stream of the job.")
     elif base_model == "none":
         print("INFO: No base model selected... Skipping training.")
 
