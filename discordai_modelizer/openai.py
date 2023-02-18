@@ -43,8 +43,12 @@ def follow_job(openai_key: str, job_id: str):
         print("ERROR: You must have the `openai` python package installed to use this command.")
 
 
-def get_status(openai_key: str, job_id: str):
-    print(openai.FineTune.retrieve(job_id, openai_key))
+def get_status(openai_key: str, job_id: str, events: bool):
+    status = openai.FineTune.retrieve(job_id, openai_key)
+    if events:
+        print(status["events"])
+    else:
+        print(status)
 
 
 def cancel_job(openai_key: str, job_id: str):

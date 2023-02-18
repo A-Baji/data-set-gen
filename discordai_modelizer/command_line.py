@@ -193,6 +193,13 @@ def discordai_modelizer():
         dest='job_id',
         help="Target job id",
     )
+    job_status.add_argument(
+        "--events",
+        action='store_true',
+        required=False,
+        dest='events',
+        help="Simplify the output to just the event list",
+    )
 
     job_cancel = job_subcommand.add_parser(
         "cancel", description="Cancel an openAI customization job"
@@ -227,7 +234,7 @@ def discordai_modelizer():
         if args.subcommand == "follow":
             openai_wrapper.follow_job(args.openai_key, args.job_id)
         if args.subcommand == "status":
-            openai_wrapper.get_status(args.openai_key, args.job_id)
+            openai_wrapper.get_status(args.openai_key, args.job_id, args.events)
         if args.subcommand == "cancel":
             openai_wrapper.cancel_job(args.openai_key, args.job_id)
 
