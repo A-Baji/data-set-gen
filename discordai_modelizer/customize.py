@@ -8,7 +8,7 @@ import openai
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 
-def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str, thought_time=10,
+def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str, thought_time=10, thought_max: int = None, thought_min = 4,
                  max_entry_count=1000, reduce_mode="even", base_model="none", clean=False, redownload=False):
     os.environ["OPENAI_API_KEY"] = openai_key
     channel_user = f"{channel_id}_{user_id}"
@@ -39,7 +39,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
 
     # Parse logs
     print("INFO: Parsing chat logs into an openAI compatible dataset...")
-    parse_logs(full_logs_path, channel_id, user_id, thought_time)
+    parse_logs(full_logs_path, channel_id, user_id, thought_time, thought_max, thought_min)
     get_lines(full_dataset_path, max_entry_count, reduce_mode)
 
     # Train customized openAI model
