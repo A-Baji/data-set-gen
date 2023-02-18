@@ -75,12 +75,28 @@ def discordai_modelizer():
         help="The base model to use for customization. If none, then skips training step: DEFAULT=none",
     )
     model_create_optional_named.add_argument(
-        "-t", "--thought-time",
+        "--ttime", "--thought-time",
         type=int,
         default=10,
         required=False,
         dest='thought_time',
         help="The max amount of time in seconds to consider two individual messages to be part of the same \"thought\": DEFAULT=10",
+    )
+    model_create_optional_named.add_argument(
+        "--tmax", "--thought-max",
+        type=int,
+        default=None,
+        required=False,
+        dest='thought_max',
+        help="The max in words length of each thought: DEFAULT=None",
+    )
+    model_create_optional_named.add_argument(
+        "--tmin", "--thought-min",
+        type=int,
+        default=4,
+        required=False,
+        dest='thought_min',
+        help="The minimum in words length of each thought: DEFAULT=4",
     )
     model_create_optional_named.add_argument(
         "-m", "--max-entries",
@@ -177,6 +193,13 @@ def discordai_modelizer():
         dest='job_id',
         help="Target job id",
     )
+    job_status.add_argument(
+        "--events",
+        action='store_true',
+        required=False,
+        dest='events',
+        help="Simplify the output to just the event list",
+    )
 
     job_cancel = job_subcommand.add_parser(
         "cancel", description="Cancel an openAI customization job"
@@ -200,9 +223,9 @@ def discordai_modelizer():
             openai_wrapper.list_models(args.openai_key, args.simple)
         if args.subcommand == "create":
             customize.create_model(args.discord_token, args.openai_key, args.channel, args.user,
-                                   thought_time=args.thought_time, max_entry_count=args.max_entries,
-                                   reduce_mode=args.reduce_mode, base_model=args.base_model, clean=args.dirty,
-                                   redownload=args.redownload)
+                                   thought_time=args.thought_time, thought_max=args.thought_max, thought_min=args.thought_min, 
+                                   max_entry_count=args.max_entries, reduce_mode=args.reduce_mode, base_model=args.base_model, 
+                                   clean=args.dirty, redownload=args.redownload)
         if args.subcommand == "delete":
             openai_wrapper.delete_model(args.openai_key, args.model_id)
     elif args.command == "job":
@@ -211,7 +234,7 @@ def discordai_modelizer():
         if args.subcommand == "follow":
             openai_wrapper.follow_job(args.openai_key, args.job_id)
         if args.subcommand == "status":
-            openai_wrapper.get_status(args.openai_key, args.job_id)
+            openai_wrapper.get_status(args.openai_key, args.job_id, args.events)
         if args.subcommand == "cancel":
             openai_wrapper.cancel_job(args.openai_key, args.job_id)
 
