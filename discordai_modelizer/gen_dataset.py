@@ -8,6 +8,7 @@ import pathlib
 def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: int = None, thought_min=4):
     files_path = pathlib.Path(user_data_dir(appname="discordai"))
     dataset = open(files_path / f"{channel}_{user}_data_set.jsonl", 'w')
+    thought_max = 999999 if not thought_max else thought_max
     with open(file, 'r', encoding='utf-8') as data_file:
         data = load(data_file)
         messages = [msg for msg in data['messages']
@@ -29,8 +30,7 @@ def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: 
                     differentiation = (curr_timestamp - prev_timestamp) / \
                         timedelta(milliseconds=1)
                     if differentiation > thought_time*1000:  # If time between messages exceed `thought_time` milliseconds
-                        thought_max = len(thought.split(" ")) if not thought_max else thought_max
-                        if len(thought.split(" ")) >= thought_min and thought_max >= len(thought.split(" ")):  # If the thought size is within `thought_min` and `thought_max`
+                        if len(thought.split(" "))-1 >= thought_min and thought_max >= len(thought.split(" "))-1:  # If the thought size is within `thought_min` and `thought_max`
                             dataset.write(
                                 dumps(
                                     {'prompt': '', 'completion': f'{thought}'
