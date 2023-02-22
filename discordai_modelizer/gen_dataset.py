@@ -3,6 +3,7 @@ from re import sub
 from json import load, dumps
 from datetime import timedelta
 from dateutil import parser
+from string import punctuation
 import pathlib
 
 def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: int = None, thought_min=4):
@@ -34,7 +35,7 @@ def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: 
                             dataset.write(
                                 dumps(
                                     {'prompt': '', 'completion': f'{thought}'
-                                     if thought[-1] == '.' else f'{thought}.'}) + "\n")
+                                     if thought[-1] in punctuation else f'{thought}.'}) + "\n")
                         thought = msg['content'] if msg['content'][
                             0] == ' ' else f" {msg['content']}"
                     else:
