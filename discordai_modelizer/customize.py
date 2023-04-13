@@ -9,7 +9,7 @@ from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 
 def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str, thought_time=10, thought_max: int = None, thought_min = 4,
-                 max_entry_count=1000, reduce_mode="even", base_model="none", clean=False, redownload=False):
+                 max_entry_count=1000, reduce_mode="even", base_model="none", clean=False, redownload=False, use_existing=False):
     os.environ["OPENAI_API_KEY"] = openai_key
     channel_user = f"{channel_id}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
@@ -38,9 +38,16 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print(f"INFO: Chat logs detected locally at {full_logs_path}... Skipping download.")
 
     # Parse logs
-    print("INFO: Parsing chat logs into an openAI compatible dataset...")
-    parse_logs(full_logs_path, channel_id, user_id, thought_time, thought_max, thought_min)
-    get_lines(full_dataset_path, max_entry_count, reduce_mode)
+    if os.path.isfile(full_dataset_path) and use_existing:
+        print("INFO: Using preexisting dataset...")
+    elif not os.path.isfile(full_dataset_path) or not use_existing:
+        if use_existing:
+            print("INFO: No preexisting dataset could be found!")
+        print("INFO: Parsing chat logs into an openAI compatible dataset...")
+        parse_logs(full_logs_path, channel_id, user_id, thought_time, thought_max, thought_min)
+        get_lines(full_dataset_path, max_entry_count, reduce_mode)
+        if not clean:
+            print(f"INFO: Dataset saved to {full_dataset_path}")
 
     # Train customized openAI model
     if base_model in ["davinci", "curie", "babbage", "ada"]:

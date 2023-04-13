@@ -128,6 +128,13 @@ def discordai_modelizer():
         dest='redownload',
         help="Redownload the discord chat logs",
     )
+    model_create_optional_named.add_argument(
+        "--use_existing",
+        action='store_true',
+        required=False,
+        dest='use_existing',
+        help="Use an existing dataset that may have been manually revised",
+    ) 
 
     model_delete = model_subcommand.add_parser(
         "delete", description="Delete an openAI customized model"
@@ -225,7 +232,7 @@ def discordai_modelizer():
             customize.create_model(args.discord_token, args.openai_key, args.channel, args.user,
                                    thought_time=args.thought_time, thought_max=args.thought_max, thought_min=args.thought_min, 
                                    max_entry_count=args.max_entries, reduce_mode=args.reduce_mode, base_model=args.base_model, 
-                                   clean=args.dirty, redownload=args.redownload)
+                                   clean=args.dirty, redownload=args.redownload, use_existing=args.use_existing)
         if args.subcommand == "delete":
             openai_wrapper.delete_model(args.openai_key, args.model_id)
     elif args.command == "job":
