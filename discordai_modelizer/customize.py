@@ -10,7 +10,7 @@ from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str, thought_time=10, thought_max: int = None, thought_min = 4,
                  max_entry_count=1000, reduce_mode="even", base_model="none", clean=False, redownload=False, use_existing=False):
-    os.environ["OPENAI_API_KEY"] = openai_key
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     channel_user = f"{channel_id}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
     full_logs_path = files_path / f"{channel_id}_logs.json"
