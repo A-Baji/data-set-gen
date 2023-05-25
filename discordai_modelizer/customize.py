@@ -16,8 +16,13 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
     full_logs_path = files_path / f"{channel_id}_logs.json"
     full_dataset_path = files_path / f"{channel_user}_data_set.jsonl"
 
+    if not os.path.isfile(full_dataset_path) and use_existing:
+        print("ERROR: No existing dataset could be found!")
+        shutil.move(f"./{channel_id}_logs.json", full_logs_path)
+        return
+
     # Download logs
-    if not os.path.isfile(full_logs_path) or redownload:
+    if (not os.path.isfile(full_logs_path) or redownload) and not use_existing:
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print("INFO: This may take a few minutes to hours depending on the message count of the channel")
         print("INFO: Progress will NOT be saved if cancelled")
@@ -34,15 +39,13 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print("--------------------------DiscordChatExporter---------------------------")
         shutil.move(f"{channel_id}_logs.json", full_logs_path)
         print(f"INFO: Logs saved to {full_logs_path}")
-    else:
+    elif not use_existing:
         print(f"INFO: Chat logs detected locally at {full_logs_path}... Skipping download.")
 
     # Parse logs
-    if os.path.isfile(full_dataset_path) and use_existing:
-        print("INFO: Using preexisting dataset...")
-    elif not os.path.isfile(full_dataset_path) or not use_existing:
-        if use_existing:
-            print("INFO: No preexisting dataset could be found!")
+    if use_existing:
+        print("INFO: Using existing dataset... Skipping download and parsing.")
+    else:
         print("INFO: Parsing chat logs into an openAI compatible dataset...")
         parse_logs(full_logs_path, channel_id, user_id, thought_time, thought_max, thought_min)
         get_lines(full_dataset_path, max_entry_count, reduce_mode)
@@ -66,7 +69,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print("INFO: No base model selected... Skipping training.")
 
     # Clean up generated files
-    if clean:
+    if clean and not use_existing:
         try:
             os.remove(full_dataset_path)
         except FileNotFoundError:
