@@ -18,7 +18,6 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
 
     if not os.path.isfile(full_dataset_path) and use_existing:
         print("ERROR: No existing dataset could be found!")
-        shutil.move(f"./{channel_id}_logs.json", full_logs_path)
         return
 
     # Download logs
