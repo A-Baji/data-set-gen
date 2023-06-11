@@ -9,15 +9,19 @@ from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 
 def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str, thought_time=10, thought_max: int = None, thought_min = 4,
-                 max_entry_count=1000, reduce_mode="even", base_model="none", clean=False, redownload=False):
-    os.environ["OPENAI_API_KEY"] = openai_key
+                 max_entry_count=1000, reduce_mode="even", base_model="none", clean=False, redownload=False, use_existing=False):
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     channel_user = f"{channel_id}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
     full_logs_path = files_path / f"{channel_id}_logs.json"
     full_dataset_path = files_path / f"{channel_user}_data_set.jsonl"
 
+    if not os.path.isfile(full_dataset_path) and use_existing:
+        print("ERROR: No existing dataset could be found!")
+        return
+
     # Download logs
-    if not os.path.isfile(full_logs_path) or redownload:
+    if (not os.path.isfile(full_logs_path) or redownload) and not use_existing:
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print("INFO: This may take a few minutes to hours depending on the message count of the channel")
         print("INFO: Progress will NOT be saved if cancelled")
@@ -34,13 +38,18 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print("--------------------------DiscordChatExporter---------------------------")
         shutil.move(f"{channel_id}_logs.json", full_logs_path)
         print(f"INFO: Logs saved to {full_logs_path}")
-    else:
+    elif not use_existing:
         print(f"INFO: Chat logs detected locally at {full_logs_path}... Skipping download.")
 
     # Parse logs
-    print("INFO: Parsing chat logs into an openAI compatible dataset...")
-    parse_logs(full_logs_path, channel_id, user_id, thought_time, thought_max, thought_min)
-    get_lines(full_dataset_path, max_entry_count, reduce_mode)
+    if use_existing:
+        print("INFO: Using existing dataset... Skipping download and parsing.")
+    else:
+        print("INFO: Parsing chat logs into an openAI compatible dataset...")
+        parse_logs(full_logs_path, channel_id, user_id, thought_time, thought_max, thought_min)
+        get_lines(full_dataset_path, max_entry_count, reduce_mode)
+        if not clean:
+            print(f"INFO: Dataset saved to {full_dataset_path}")
 
     # Train customized openAI model
     if base_model in ["davinci", "curie", "babbage", "ada"]:
@@ -59,7 +68,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
         print("INFO: No base model selected... Skipping training.")
 
     # Clean up generated files
-    if clean:
+    if clean and not use_existing:
         try:
             os.remove(full_dataset_path)
         except FileNotFoundError:

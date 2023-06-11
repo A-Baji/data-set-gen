@@ -33,7 +33,7 @@ def list_models(openai_key: str, simple=False):
 
 
 def follow_job(openai_key: str, job_id: str):
-    os.environ["OPENAI_API_KEY"] = openai_key
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     try:
         subprocess.run([
             "openai", "api", "fine_tunes.follow",
@@ -56,5 +56,9 @@ def cancel_job(openai_key: str, job_id: str):
 
 
 def delete_model(openai_key: str, model_name: str):
-    os.environ["OPENAI_API_KEY"] = openai_key
+    confirm = input("Are you sure you want to delete this model? This action is not reversable. Y/N: ")
+    if confirm not in ["Y", "y", "yes", "Yes", "YES"]:
+        print("Cancelling model deletion...")
+        return
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     print(openai.Model.delete(model_name))
