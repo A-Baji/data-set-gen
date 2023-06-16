@@ -4,16 +4,22 @@ from json import load, dumps
 from datetime import timedelta
 from dateutil import parser
 from string import punctuation
+from os import path
 import pathlib
 
 def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: int = None, thought_min=4):
     files_path = pathlib.Path(user_data_dir(appname="discordai"))
     dataset = open(files_path / f"{channel}_{user}_data_set.jsonl", 'w')
     thought_max = 999999 if not thought_max else thought_max
+    try:
+        username, user_id = user.split('#') 
+    except ValueError:
+        username, user_id = user, None
     with open(file, 'r', encoding='utf-8') as data_file:
         data = load(data_file)
         messages = [msg for msg in data['messages']
-                    if f"{msg['author']['name']}#{msg['author']['discriminator']}" == user]
+                    if f'''{msg['author']['name']}{f"#{msg['author']['discriminator']}" if user_id else ''}''' == 
+                    f"{username}{f'#{user_id}' if user_id else ''}"]
         thought = ''
         for i, msg in enumerate(messages):
             msg['content'] = sub(
@@ -46,6 +52,8 @@ def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: 
                             dumps(
                                 {'prompt': '', 'completion': f'{thought}'
                                  if thought[-1] == '.' else f'{thought}.'}) + "\n")
+    if path.getsize(files_path / f"{channel}_{user}_data_set.jsonl") == 0:
+        print("WARNING: The resulting dataset is empty. Please double check your parameters.")
     dataset.close()
 
 

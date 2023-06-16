@@ -1,7 +1,7 @@
 # VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose up --build
 # discordai_modelizer model list --simple
 # discordai_modelizer model create -d $DISCORD_TOKEN -c $CHANNEL_ID -u "$USERNAME"
-# discordai_modelizer model delete -m "text-babbage:001"
+# discordai_modelizer model delete -m "text-babbage-001"
 # discordai_modelizer job list --simple
 # discordai_modelizer job follow -j ft-V31oOgRGZaVZJvZNQFSvSRBl
 # discordai_modelizer job status -j ft-V31oOgRGZaVZJvZNQFSvSRBl --events
