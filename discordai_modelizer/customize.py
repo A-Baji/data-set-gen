@@ -58,8 +58,7 @@ def create_model(bot_token: str, openai_key: str, channel_id: str, user_id: str,
             file=open(full_dataset_path, "rb"),
             purpose='fine-tune'
         )
-        file_id = upload_response.id
-        fine_tune=openai.FineTune.create(api_key=openai_key, training_file=file_id, model=base_model, suffix=user_id)
+        fine_tune=openai.FineTune.create(api_key=openai_key, training_file=upload_response.id, model=base_model, suffix=user_id)
         print(f"INFO: Fine tune job id: {fine_tune.id}")
         print("INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model")
         print("INFO: Use the `job status` command to check on the status of job process") 
