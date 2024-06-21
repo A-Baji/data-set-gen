@@ -24,8 +24,6 @@ Commands related to your openAI models
 Commands related to your openAI jobs
 #### `discordai_modelizer job list`
 * List your openAI customization jobs
-#### `discordai_modelizer job follow`
-* Follow an openAI customization job
 #### `discordai_modelizer job status`
 * Get an openAI customization job's status
 #### `discordai_modelizer job cancel`
