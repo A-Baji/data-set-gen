@@ -5,8 +5,6 @@ import shutil
 import pathlib
 
 from openai import OpenAI
-
-client = OpenAI()
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 
@@ -26,6 +24,7 @@ def create_model(
     use_existing=False,
 ):
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+    client = OpenAI()
     channel_user = f"{channel_id}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
     full_logs_path = files_path / f"{channel_id}_logs.json"
@@ -90,13 +89,12 @@ def create_model(
     if base_model in ["davinci", "curie", "babbage", "ada"]:
         print("INFO: Training customized openAI model...")
         upload_response = client.files.create(
-            api_key=openai_key, file=open(full_dataset_path, "rb"), purpose="fine-tune"
+            file=open(full_dataset_path, "rb"), purpose="fine-tune"
         )
         fine_tune = client.fine_tuning.jobs.create(
-            api_key=openai_key,
-            training_file=upload_response.id,
             model=base_model,
-            suffix=user_id,
+            training_file=upload_response.id,
+            suffix=channel_user,
         )
         print(f"INFO: Fine tune job id: {fine_tune.id}")
         print(
@@ -114,3 +112,5 @@ def create_model(
             os.remove(full_dataset_path)
         except FileNotFoundError:
             pass
+
+    client.close()

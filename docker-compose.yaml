@@ -5,7 +5,6 @@
 # discordai_modelizer job list --simple
 # discordai_modelizer job status -j ft-V31oOgRGZaVZJvZNQFSvSRBl --events
 # discordai_modelizer job cancel -j ft-V31oOgRGZaVZJvZNQFSvSRBl
-version: '2.4'
 services:
   app:
     build: .
