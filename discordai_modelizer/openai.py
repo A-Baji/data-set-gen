@@ -42,7 +42,7 @@ def get_status(openai_key: str, job_id: str, events: bool):
 
 
 def cancel_job(openai_key: str, job_id: str):
-    print(client.fine_tunes.cancel(job_id, openai_key))
+    print(client.fine_tuning.jobs.cancel(job_id))
 
 
 def delete_model(openai_key: str, model_name: str):
