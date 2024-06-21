@@ -1,35 +1,37 @@
-import openai
+from openai import OpenAI
+
+client = OpenAI()
 import json
 import os
 import subprocess
 
 
 def list_jobs(openai_key: str, simple=False):
-    finetunes = openai.FineTune.list(openai_key)
+    finetunes = client.fine_tuning.jobs.list()
     if not simple:
-        print(finetunes)
+        print(json.dumps(finetunes.data))
     else:
-        simplified = []
-        for ft in finetunes["data"]:
-            entry = {}
-            entry["fine_tuned_model"] = ft["fine_tuned_model"]
-            entry["id"] = ft["id"]
-            entry["status"] = ft["status"]
-            simplified.append(entry)
-        print(json.dumps(simplified, indent=4))
+        print(
+            json.dumps(
+                [
+                    {
+                        "fine_tuned_model": j.fine_tuned_model,
+                        "id": j.id,
+                        "status": j.status,
+                    }
+                    for j in finetunes.data
+                ],
+                indent=4,
+            )
+        )
 
 
 def list_models(openai_key: str, simple=False):
-    finetunes = openai.Model.list(openai_key)
+    finetunes = client.models.list()
     if not simple:
-        print(finetunes)
+        print(json.dumps([f.model_dump() for f in finetunes], indent=4))
     else:
-        simplified = []
-        for ft in finetunes["data"]:
-            entry = {}
-            entry["id"] = ft["id"]
-            simplified.append(entry)
-        print(json.dumps(simplified, indent=4))
+        print(json.dumps([{"id": m.id} for m in finetunes.data], indent=4))
 
 
 def follow_job(openai_key: str, job_id: str):
