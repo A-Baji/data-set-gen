@@ -35,11 +35,10 @@ def list_models(openai_key: str, simple=False):
 
 
 def get_status(openai_key: str, job_id: str, events: bool):
-    status = client.fine_tunes.retrieve(job_id, openai_key)
     if events:
-        print(status.events)
+        print(client.fine_tuning.jobs.list_events(job_id).data)
     else:
-        print(status)
+        print(client.fine_tuning.jobs.retrieve(job_id))
 
 
 def cancel_job(openai_key: str, job_id: str):
