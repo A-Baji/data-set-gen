@@ -87,6 +87,7 @@ def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: 
 def get_lines(file_name, N, method):
     with open(file_name, "r") as f:
         lines = f.readlines()
+    f.close()
     num_lines = len(lines)
 
     if N > num_lines:
@@ -115,3 +116,4 @@ def get_lines(file_name, N, method):
 
     with open(file_name, "w") as f:
         f.writelines(selected_lines)
+    f.close()
