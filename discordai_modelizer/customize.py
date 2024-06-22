@@ -68,9 +68,10 @@ def create_model(
         print(
             "--------------------------DiscordChatExporter---------------------------"
         )
+        os.makedirs(os.path.dirname(full_logs_path), exist_ok=True)
         shutil.move(f"{channel_id}_logs.json", full_logs_path)
         print(f"INFO: Logs saved to {full_logs_path}")
-    elif not use_existing:
+    elif (os.path.isfile(full_logs_path) and not redownload) and not use_existing:
         print(
             f"INFO: Chat logs detected locally at {full_logs_path}... Skipping download."
         )
