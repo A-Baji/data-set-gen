@@ -32,11 +32,11 @@ def discordai_modelizer():
         help="The openAI API key to list the models for",
     )
     model_list.add_argument(
-        "--simple",
+        "--full",
         action="store_true",
         required=False,
-        dest="simple",
-        help="Simplify the output to just the model name, job id, and status",
+        dest="full",
+        help="Return the full details of all the models",
     )
 
     model_create = model_subcommand.add_parser(
@@ -182,11 +182,11 @@ def discordai_modelizer():
         help="The openAI API key to list the jobs for",
     )
     job_list.add_argument(
-        "--simple",
+        "--full",
         action="store_true",
         required=False,
-        dest="simple",
-        help="Simplify the output to just the model name, job id, and status",
+        dest="full",
+        help="Return the full details of all the jobs",
     )
 
     job_status = job_subcommand.add_parser(
@@ -235,7 +235,7 @@ def discordai_modelizer():
     args = parser.parse_args()
     if args.command == "model":
         if args.subcommand == "list":
-            openai_wrapper.list_models(args.openai_key, args.simple)
+            openai_wrapper.list_models(args.openai_key, args.full)
         if args.subcommand == "create":
             customize.create_model(
                 args.discord_token,
@@ -256,7 +256,7 @@ def discordai_modelizer():
             openai_wrapper.delete_model(args.openai_key, args.model_id)
     elif args.command == "job":
         if args.subcommand == "list":
-            openai_wrapper.list_jobs(args.openai_key, args.simple)
+            openai_wrapper.list_jobs(args.openai_key, args.full)
         if args.subcommand == "status":
             openai_wrapper.get_status(args.openai_key, args.job_id, args.events)
         if args.subcommand == "cancel":

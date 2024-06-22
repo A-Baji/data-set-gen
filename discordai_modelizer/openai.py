@@ -2,22 +2,40 @@ import json
 import os
 
 from openai import OpenAI
+from datetime import datetime, timezone
 
 
-def list_jobs(openai_key: str, simple=False):
+def convert_timestamp(time: int):
+    timestamp = datetime.fromtimestamp(time, tz=timezone.utc)
+    human_readable_time = timestamp.astimezone().strftime("%Y-%m-%d %H:%M:%S")
+    return human_readable_time
+
+
+def list_jobs(openai_key: str, full=False):
+
+    def convert_in_place(job):
+        job["created_at"] = convert_timestamp(job["created_at"])
+        return job
+
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
     finetunes = client.fine_tuning.jobs.list()
-    if not simple:
-        print(json.dumps(finetunes.data))
+    if full:
+        print(
+            json.dumps(
+                [convert_in_place(j.model_dump()) for j in finetunes.data],
+                indent=4,
+            )
+        )
     else:
         print(
             json.dumps(
                 [
                     {
-                        "fine_tuned_model": j.fine_tuned_model,
                         "id": j.id,
+                        "model": j.model,
                         "status": j.status,
+                        "created_at": convert_timestamp(j.created_at),
                     }
                     for j in finetunes.data
                 ],
