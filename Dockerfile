@@ -1,7 +1,6 @@
-FROM python:3.11-alpine
+FROM python:3.11
 WORKDIR /main
-RUN apk update
-RUN apk add git
+RUN apt-get install git -y
 COPY ./requirements.txt ./setup.py ./README.md /main/
 COPY ./discordai_modelizer /main/discordai_modelizer
 RUN pip3 install --upgrade pip

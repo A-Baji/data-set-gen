@@ -47,7 +47,7 @@ def create_model(
         DiscordChatExporter = (
             pathlib.Path(os.path.dirname(__file__))
             / "DiscordChatExporter"
-            / "DiscordChatExporter.Cli.exe"
+            / "DiscordChatExporter.Cli"
         )
         subprocess.run(
             [
@@ -61,6 +61,8 @@ def create_model(
                 f"{channel_id}_logs.json",
                 "-f",
                 "Json",
+                "--fuck-russia",
+                "True",
             ]
         )
         print(
