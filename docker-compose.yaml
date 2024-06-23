@@ -21,6 +21,7 @@ services:
     env_file: ./.env
     volumes:
       - ./discordai_modelizer:/usr/local/lib/python3.11/site-packages/discordai_modelizer
+      - ./files/:/root/.local/share/discordai/
     command:
       - sh
       - -c
