@@ -105,10 +105,10 @@ def create_model(
             training_file=upload_response.id,
             suffix=channel_user[:18],
         )
-        print(f"INFO: Fine tune job id: {fine_tune.id}")
         print(
             "INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model"
         )
+        print(f"INFO: Fine tune job id: {fine_tune.id}")
         print(
             "INFO: Use the `job info -j <job_id>` command to check the info of the job process"
         )

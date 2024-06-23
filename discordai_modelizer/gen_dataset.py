@@ -43,7 +43,7 @@ def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: 
         """
         if thought[-1] not in punctuation:
             thought += '.'
-        return dumps({'prompt': '', 'completion': thought}) + '\n'
+        return dumps({'prompt': f'{username} says:', 'completion': thought}) + '\n'
     
     def add_to_dataset(thought: str):
         """
@@ -80,7 +80,7 @@ def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: 
                     thought = build_thought(thought, msg)
         add_to_dataset(thought)
     dataset.close()
-    if path.getsize(files_path / f"{channel}_{user}_data_set.jsonl") == 0:
+    if path.getsize(files_path / f"{channel[:4]}_{user}_data_set.jsonl") == 0:
         print("WARNING: The resulting dataset is empty. Please double check your parameters.")
 
 
