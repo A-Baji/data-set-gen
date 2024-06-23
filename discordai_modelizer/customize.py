@@ -110,7 +110,7 @@ def create_model(
             "INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model"
         )
         print(
-            "INFO: Use the `job status -j <job_id>` command to check on the status of the job process"
+            "INFO: Use the `job info -j <job_id>` command to check the info of the job process"
         )
         print(
             "INFO: Use the `job events -j <job_id>` command to view the fine-tuning events of the job process"

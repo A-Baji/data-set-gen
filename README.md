@@ -24,8 +24,8 @@ Commands related to your openAI models
 Commands related to your openAI jobs
 #### `discordai_modelizer job list`
 * List your openAI customization jobs
-#### `discordai_modelizer job status`
-* Get an openAI customization job's status
+#### `discordai_modelizer job info`
+* Get an openAI customization job's info
 #### `discordai_modelizer job cancel`
 * Cancel an openAI customization job
 

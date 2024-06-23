@@ -3,8 +3,8 @@
 # discordai_modelizer model create -d $DISCORD_TOKEN -c $CHANNEL_ID -u "$USERNAME"
 # discordai_modelizer model delete -m ""
 # discordai_modelizer job list --full
-# discordai_modelizer job status -j ft-V31oOgRGZaVZJvZNQFSvSRBl --events
-# discordai_modelizer job cancel -j ft-V31oOgRGZaVZJvZNQFSvSRBl
+# discordai_modelizer job info -j ftjob-SDOuDLTs6a7xu9LMzdhJKo9w --events
+# discordai_modelizer job cancel -j ftjob-SDOuDLTs6a7xu9LMzdhJKo9w
 services:
   app:
     build: .
