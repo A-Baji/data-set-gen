@@ -88,7 +88,13 @@ def create_model(
     else:
         print("INFO: Parsing chat logs into an openAI compatible dataset...")
         parse_logs(
-            full_logs_path, channel_id, user_id, thought_time, thought_max, thought_min
+            full_logs_path,
+            channel_id,
+            user_id,
+            base_model,
+            thought_time,
+            thought_max,
+            thought_min,
         )
         get_lines(full_dataset_path, max_entry_count, reduce_mode)
         if not clean:
@@ -117,6 +123,9 @@ def create_model(
         )
         print(
             "INFO: Use the `job cancel -j <job_id>` command to cancel the job process"
+        )
+        print(
+            "INFO: Or visit the OpenAI dashboard: https://platform.openai.com/finetune"
         )
     else:
         print("INFO: No base model selected... Skipping training.")

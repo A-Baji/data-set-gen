@@ -81,7 +81,7 @@ def discordai_modelizer():
     model_create_optional_named.add_argument(
         "-b",
         "--base-model",
-        choices=["davinci", "curie", "babbage", "ada", "none"],
+        choices=["gpt3", "davinci", "babbage", "none"],
         default="none",
         required=False,
         dest="base_model",
