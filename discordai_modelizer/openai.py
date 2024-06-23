@@ -108,5 +108,6 @@ def delete_model(openai_key: str, model_name: str) -> dict:
         return
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
+    deleted = client.models.delete(model_name).model_dump()
     client.close()
-    return client.models.delete(model_name).model_dump()
+    return deleted
