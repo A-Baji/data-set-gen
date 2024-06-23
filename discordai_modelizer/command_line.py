@@ -206,12 +206,23 @@ def discordai_modelizer():
         dest="job_id",
         help="Target job id",
     )
-    job_status.add_argument(
-        "--events",
-        action="store_true",
-        required=False,
-        dest="events",
-        help="Simplify the output to just the event list",
+
+    job_events = job_subcommand.add_parser(
+        "events", description="Get an openAI customization job's events"
+    )
+    job_events.add_argument(
+        "-o",
+        "--openai-key",
+        type=str,
+        dest="openai_key",
+        help="The openAI API key associated with the job to see the events for",
+    )
+    job_events.add_argument(
+        "-j",
+        "--job-id",
+        type=str,
+        dest="job_id",
+        help="Target job id",
     )
 
     job_cancel = job_subcommand.add_parser(
@@ -258,7 +269,9 @@ def discordai_modelizer():
         if args.subcommand == "list":
             openai_wrapper.list_jobs(args.openai_key, args.full)
         if args.subcommand == "status":
-            openai_wrapper.get_status(args.openai_key, args.job_id, args.events)
+            openai_wrapper.get_status(args.openai_key, args.job_id)
+        if args.subcommand == "events":
+            openai_wrapper.get_events(args.openai_key, args.job_id)
         if args.subcommand == "cancel":
             openai_wrapper.cancel_job(args.openai_key, args.job_id)
 

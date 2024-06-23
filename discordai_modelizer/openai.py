@@ -82,38 +82,41 @@ def list_models(openai_key: str, full=False):
     client.close()
 
 
-def get_status(openai_key: str, job_id: str, events: bool):
+def get_status(openai_key: str, job_id: str):
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
-    if events:
-        print(
-            json.dumps(
-                [
-                    convert_in_place(
-                        j.model_dump(),
-                        "created_at",
-                    )
-                    for j in client.fine_tuning.jobs.list_events(job_id).data
-                ],
-                indent=4,
-            )
-        )
-    else:
-        job = client.fine_tuning.jobs.retrieve(job_id)
-        print(
-            json.dumps(
-                convert_in_place(
-                    (
-                        convert_in_place(job.model_dump(), "finished_at")
-                        if job.finished_at
-                        else job.model_dump()
-                    ),
-                    "created_at",
+    job = client.fine_tuning.jobs.retrieve(job_id)
+    print(
+        json.dumps(
+            convert_in_place(
+                (
+                    convert_in_place(job.model_dump(), "finished_at")
+                    if job.finished_at
+                    else job.model_dump()
                 ),
-                indent=4,
-            )
+                "created_at",
+            ),
+            indent=4,
         )
-        return job.status
+    )
+    client.close()
+
+
+def get_events(openai_key: str, job_id: str):
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+    client = OpenAI()
+    print(
+        json.dumps(
+            [
+                convert_in_place(
+                    j.model_dump(),
+                    "created_at",
+                )
+                for j in client.fine_tuning.jobs.list_events(job_id).data
+            ],
+            indent=4,
+        )
+    )
     client.close()
 
 
