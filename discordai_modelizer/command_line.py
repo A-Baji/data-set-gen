@@ -1,4 +1,5 @@
 import argparse
+import json
 from discordai_modelizer import __version__ as version
 from discordai_modelizer import customize
 from discordai_modelizer import openai as openai_wrapper
@@ -189,17 +190,17 @@ def discordai_modelizer():
         help="Return the full details of all the jobs",
     )
 
-    job_status = job_subcommand.add_parser(
-        "status", description="Get an openAI customization job's status"
+    job_info = job_subcommand.add_parser(
+        "info", description="Get an openAI customization job's info"
     )
-    job_status.add_argument(
+    job_info.add_argument(
         "-o",
         "--openai-key",
         type=str,
         dest="openai_key",
-        help="The openAI API key associated with the job to see the status for",
+        help="The openAI API key associated with the job to see the info for",
     )
-    job_status.add_argument(
+    job_info.add_argument(
         "-j",
         "--job-id",
         type=str,
@@ -246,7 +247,7 @@ def discordai_modelizer():
     args = parser.parse_args()
     if args.command == "model":
         if args.subcommand == "list":
-            openai_wrapper.list_models(args.openai_key, args.full)
+            display(openai_wrapper.list_models(args.openai_key, args.full))
         if args.subcommand == "create":
             customize.create_model(
                 args.discord_token,
@@ -264,16 +265,20 @@ def discordai_modelizer():
                 use_existing=args.use_existing,
             )
         if args.subcommand == "delete":
-            openai_wrapper.delete_model(args.openai_key, args.model_id)
+            display(openai_wrapper.delete_model(args.openai_key, args.model_id))
     elif args.command == "job":
         if args.subcommand == "list":
-            openai_wrapper.list_jobs(args.openai_key, args.full)
-        if args.subcommand == "status":
-            openai_wrapper.get_status(args.openai_key, args.job_id)
+            display(openai_wrapper.list_jobs(args.openai_key, args.full))
+        if args.subcommand == "info":
+            display(openai_wrapper.get_job_info(args.openai_key, args.job_id))
         if args.subcommand == "events":
-            openai_wrapper.get_events(args.openai_key, args.job_id)
+            display(openai_wrapper.get_job_events(args.openai_key, args.job_id))
         if args.subcommand == "cancel":
-            openai_wrapper.cancel_job(args.openai_key, args.job_id)
+            display(openai_wrapper.cancel_job(args.openai_key, args.job_id))
+
+
+def display(obj):
+    print(json.dumps(obj, indent=4))
 
 
 if __name__ == "__main__":

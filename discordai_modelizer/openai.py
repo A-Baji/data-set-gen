@@ -16,119 +16,90 @@ def convert_in_place(obj, key: str):
     return obj
 
 
-def list_jobs(openai_key: str, full=False):
+def list_jobs(openai_key: str, full=False) -> list[dict]:
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
     finetunes = client.fine_tuning.jobs.list()
-    if full:
-        print(
-            json.dumps(
-                [
-                    convert_in_place(
-                        (
-                            convert_in_place(j.model_dump(), "finished_at")
-                            if j.finished_at
-                            else j.model_dump()
-                        ),
-                        "created_at",
-                    )
-                    for j in finetunes.data
-                ],
-                indent=4,
-            )
-        )
-    else:
-        print(
-            json.dumps(
-                [
-                    {
-                        "id": j.id,
-                        "model": j.model,
-                        "status": j.status,
-                        "created_at": convert_timestamp(j.created_at),
-                        "finished_at": (
-                            convert_timestamp(j.finished_at) if j.finished_at else None
-                        ),
-                    }
-                    for j in finetunes.data
-                ],
-                indent=4,
-            )
-        )
     client.close()
+    if full:
+        return [
+            convert_in_place(
+                (
+                    convert_in_place(j.model_dump(), "finished_at")
+                    if j.finished_at
+                    else j.model_dump()
+                ),
+                "created_at",
+            )
+            for j in finetunes.data
+        ]
+    else:
+        return [
+            {
+                "id": j.id,
+                "model": j.model,
+                "status": j.status,
+                "created_at": convert_timestamp(j.created_at),
+                "finished_at": (
+                    convert_timestamp(j.finished_at) if j.finished_at else None
+                ),
+            }
+            for j in finetunes.data
+        ]
 
 
-def list_models(openai_key: str, full=False):
+def list_models(openai_key: str, full=False) -> list[dict]:
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
     finetunes = client.models.list()
-    if full:
-        print(
-            json.dumps(
-                [convert_in_place(f.model_dump(), "created") for f in finetunes.data],
-                indent=4,
-            )
-        )
-    else:
-        print(
-            json.dumps(
-                [
-                    {"id": m.id, "created": convert_timestamp(m.created)}
-                    for m in finetunes.data
-                ],
-                indent=4,
-            )
-        )
     client.close()
+    if full:
+        return [convert_in_place(f.model_dump(), "created") for f in finetunes.data]
+    else:
+        return [
+            {"id": m.id, "created": convert_timestamp(m.created)}
+            for m in finetunes.data
+        ]
 
 
-def get_status(openai_key: str, job_id: str):
+def get_job_info(openai_key: str, job_id: str) -> dict:
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
     job = client.fine_tuning.jobs.retrieve(job_id)
-    print(
-        json.dumps(
-            convert_in_place(
-                (
-                    convert_in_place(job.model_dump(), "finished_at")
-                    if job.finished_at
-                    else job.model_dump()
-                ),
-                "created_at",
-            ),
-            indent=4,
-        )
-    )
     client.close()
+    return convert_in_place(
+        (
+            convert_in_place(job.model_dump(), "finished_at")
+            if job.finished_at
+            else job.model_dump()
+        ),
+        "created_at",
+    )
 
 
-def get_events(openai_key: str, job_id: str):
+def get_job_events(openai_key: str, job_id: str) -> list[dict]:
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
-    print(
-        json.dumps(
-            [
-                convert_in_place(
-                    j.model_dump(),
-                    "created_at",
-                )
-                for j in client.fine_tuning.jobs.list_events(job_id).data
-            ],
-            indent=4,
-        )
-    )
+    events = client.fine_tuning.jobs.list_events(job_id).data
     client.close()
+    return [
+        convert_in_place(
+            j.model_dump(),
+            "created_at",
+        )
+        for j in events
+    ]
 
 
-def cancel_job(openai_key: str, job_id: str):
+def cancel_job(openai_key: str, job_id: str) -> dict:
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
     client.fine_tuning.jobs.cancel(job_id)
-    print(f"Canceled fine-tuning job: {job_id}")
     client.close()
+    return {"result": f"Canceled fine-tuning job: {job_id}"}
 
 
-def delete_model(openai_key: str, model_name: str):
+def delete_model(openai_key: str, model_name: str) -> dict:
     confirm = input(
         "Are you sure you want to delete this model? This action is not reversable. Y/N: "
     )
@@ -137,5 +108,5 @@ def delete_model(openai_key: str, model_name: str):
         return
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
-    print(client.models.delete(model_name))
     client.close()
+    return client.models.delete(model_name).model_dump()
