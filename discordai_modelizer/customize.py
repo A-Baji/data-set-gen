@@ -7,6 +7,12 @@ import pathlib
 from openai import OpenAI
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
+MODEL_MAP = {
+    "gpt3": "gpt-3.5-turbo",
+    "davinci": "davinci-002",
+    "babbage": "babbage-002",
+}
+
 
 def create_model(
     bot_token: str,
@@ -25,7 +31,7 @@ def create_model(
 ):
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
-    channel_user = f"{channel_id}_{user_id}"
+    channel_user = f"{channel_id[:4]}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
     full_logs_path = files_path / f"{channel_id}_logs.json"
     full_dataset_path = files_path / f"{channel_user}_data_set.jsonl"
@@ -89,24 +95,30 @@ def create_model(
             print(f"INFO: Dataset saved to {full_dataset_path}")
 
     # Train customized openAI model
-    if base_model in ["davinci", "curie", "babbage", "ada"]:
-        print("INFO: Training customized openAI model...")
+    if base_model in ["gpt3", "davinci", "babbage"]:
+        print("INFO: Starting OpenAI fine-tune job...")
         upload_response = client.files.create(
             file=open(full_dataset_path, "rb"), purpose="fine-tune"
         )
         fine_tune = client.fine_tuning.jobs.create(
-            model=base_model,
+            model=MODEL_MAP[base_model],
             training_file=upload_response.id,
-            suffix=channel_user,
+            suffix=channel_user[:18],
         )
         print(f"INFO: Fine tune job id: {fine_tune.id}")
         print(
             "INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model"
         )
         print(
-            "INFO: Use the `job status` command to check on the status of job process"
+            "INFO: Use the `job status -j <job_id>` command to check on the status of the job process"
         )
-    elif base_model == "none":
+        print(
+            "INFO: Use the `job events -j <job_id>` command to view the fine-tuning events of the job process"
+        )
+        print(
+            "INFO: Use the `job cancel -j <job_id>` command to cancel the job process"
+        )
+    else:
         print("INFO: No base model selected... Skipping training.")
 
     # Clean up generated files

@@ -53,7 +53,7 @@ def parse_logs(file: str, channel:str, user: str, thought_time=10, thought_max: 
             dataset.write(build_json(thought))
 
     files_path = pathlib.Path(user_data_dir(appname="discordai"))
-    dataset = open(files_path / f"{channel}_{user}_data_set.jsonl", 'w')
+    dataset = open(files_path / f"{channel[:4]}_{user}_data_set.jsonl", 'w')
     thought_max = 999999 if not thought_max else thought_max
     if '#' in user:
         username, user_id = user.split('#') 
