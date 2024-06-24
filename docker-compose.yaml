@@ -1,4 +1,5 @@
 # VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose up --build
+# docker exec -it discordai-modelizer-app-1 bash
 # discordai_modelizer model list --full
 # discordai_modelizer model create -d $DISCORD_TOKEN -c $CHANNEL_ID -u "$USERNAME"
 # discordai_modelizer model delete -m ""

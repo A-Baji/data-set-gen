@@ -117,7 +117,12 @@ def parse_logs(
         )
 
 
-def get_lines(file_name: str, N=1000, offset=0, select_mode="start", reverse=False):
+import json
+
+
+def get_lines(
+    file_name: str, N=1000, offset=0, select_mode="sequential", reverse=False
+):
     with open(file_name, "r") as f:
         lines = f.readlines()
     f.close()
@@ -129,16 +134,12 @@ def get_lines(file_name: str, N=1000, offset=0, select_mode="start", reverse=Fal
     if select_mode == "sequential":
         step = 1
     else:
-        step = ceil(num_lines // N)
+        step = num_lines // N
 
-    print(reverse)
     if reverse:
         lines = lines[::-1]
 
-    offset -= 1
-    selected_lines = lines[offset:][::step][: offset + N]
-    if len(selected_lines) > N:
-        selected_lines = selected_lines[:N]
+    selected_lines = lines[offset:][::step][:N]
 
     with open(file_name, "w") as f:
         f.writelines(selected_lines)
