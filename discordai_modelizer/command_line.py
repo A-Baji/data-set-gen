@@ -94,7 +94,7 @@ def discordai_modelizer():
         default=10,
         required=False,
         dest="thought_time",
-        help='The max amount of time in seconds to consider two individual messages to be part of the same "thought": DEFAULT=10',
+        help='The maximum amount of time in seconds to consider two individual messages to be part of the same "thought": DEFAULT=10',
     )
     model_create_optional_named.add_argument(
         "--tmax",
@@ -103,7 +103,7 @@ def discordai_modelizer():
         default=None,
         required=False,
         dest="thought_max",
-        help="The max in words length of each thought: DEFAULT=None",
+        help="The maximum length in words of each thought: DEFAULT=None",
     )
     model_create_optional_named.add_argument(
         "--tmin",
@@ -112,7 +112,7 @@ def discordai_modelizer():
         default=4,
         required=False,
         dest="thought_min",
-        help="The minimum in words length of each thought: DEFAULT=4",
+        help="The minimum length in words of each thought: DEFAULT=4",
     )
     model_create_optional_named.add_argument(
         "-m",
@@ -121,16 +121,32 @@ def discordai_modelizer():
         default=1000,
         required=False,
         dest="max_entries",
-        help="The max amount of entries that may exist in the dataset: DEFAULT=1000",
+        help="The max amount of entries (by lines) that may exist in the dataset: DEFAULT=1000",
     )
     model_create_optional_named.add_argument(
-        "-r",
-        "--reduce-mode",
-        choices=["first", "last", "middle", "even"],
-        default="even",
+        "--os",
+        "--offset",
+        type=int,
+        default=0,
         required=False,
-        dest="reduce_mode",
-        help="The method to reduce the entry count of the dataset: DEFAULT=even",
+        dest="offset",
+        help="The offset by line number for where to start selecting lines for the dataset: DEFAULT=0",
+    )
+    model_create_optional_named.add_argument(
+        "-s",
+        "--select-mode",
+        choices=["sequential", "distributed"],
+        default="sequential",
+        required=False,
+        dest="select_mode",
+        help="The method to select lines for the dataset, where `sequential` mode will select lines in chronological order, while `distributed` mode will select an even distribution of lines: DEFAULT=sequential",
+    )
+    model_create_optional_named.add_argument(
+        "--reverse",
+        action="store_true",
+        required=False,
+        dest="reverse",
+        help="Reverse the order in which to select lines for the dataset",
     )
     model_create_optional_named.add_argument(
         "--dirty",
@@ -258,7 +274,9 @@ def discordai_modelizer():
                 thought_max=args.thought_max,
                 thought_min=args.thought_min,
                 max_entry_count=args.max_entries,
-                reduce_mode=args.reduce_mode,
+                offset=args.offset,
+                select_mode=args.select_mode,
+                reverse=args.reverse,
                 base_model=args.base_model,
                 clean=args.dirty,
                 redownload=args.redownload,

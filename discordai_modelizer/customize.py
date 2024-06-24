@@ -23,8 +23,10 @@ def create_model(
     thought_max: int = None,
     thought_min=4,
     max_entry_count=1000,
-    reduce_mode="even",
+    offset="start",
+    select_mode="sequential",
     base_model="none",
+    reverse=False,
     clean=False,
     redownload=False,
     use_existing=False,
@@ -96,7 +98,7 @@ def create_model(
             thought_max,
             thought_min,
         )
-        get_lines(full_dataset_path, max_entry_count, reduce_mode)
+        get_lines(full_dataset_path, max_entry_count, offset, select_mode, reverse)
         if not clean:
             print(f"INFO: Dataset saved to {full_dataset_path}")
 
