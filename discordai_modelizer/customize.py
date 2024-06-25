@@ -8,7 +8,6 @@ from openai import OpenAI
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 MODEL_MAP = {
-    "gpt3": "gpt-3.5-turbo",
     "davinci": "davinci-002",
     "babbage": "babbage-002",
 }
@@ -103,7 +102,7 @@ def create_model(
             print(f"INFO: Dataset saved to {full_dataset_path}")
 
     # Train customized openAI model
-    if base_model in ["gpt3", "davinci", "babbage"]:
+    if base_model in ["davinci", "babbage"]:
         print("INFO: Starting OpenAI fine-tune job...")
         upload_response = client.files.create(
             file=open(full_dataset_path, "rb"), purpose="fine-tune"

@@ -6,6 +6,7 @@ from datetime import timedelta
 from dateutil import parser
 from string import punctuation
 from os import path
+from better_profanity import profanity
 import pathlib
 
 
@@ -33,8 +34,8 @@ def parse_logs(
         Remove URLs from a message and,
             return the message
         """
-        msg["content"] = sub(
-            r"\bhttps?://\S+|\bftp://\S+|\bfile://\S+", "", msg["content"]
+        msg["content"] = profanity.censor(
+            sub(r"\bhttps?://\S+|\bftp://\S+|\bfile://\S+", "", msg["content"])
         )
         return msg
 
@@ -55,24 +56,7 @@ def parse_logs(
         """
         if thought[-1] not in punctuation:
             thought += "."
-        if model == "gpt3":
-            return (
-                dumps(
-                    {
-                        "messages": [
-                            {
-                                "role": "system",
-                                "content": f"{username} is a conversational chatbot that imitates the user {username}.",
-                            },
-                            {"role": "user", "content": f"{username} says:"},
-                            {"role": "assistant", "content": thought},
-                        ]
-                    }
-                )
-                + "\n"
-            )
-        else:
-            return dumps({"prompt": f"{username} says:", "completion": thought}) + "\n"
+        return dumps({"prompt": f"{username} says:", "completion": thought}) + "\n"
 
     def add_to_dataset(thought: str):
         """
@@ -115,9 +99,6 @@ def parse_logs(
         print(
             "WARNING: The resulting dataset is empty. Please double check your parameters."
         )
-
-
-import json
 
 
 def get_lines(
