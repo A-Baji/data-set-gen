@@ -1,64 +1,113 @@
-import openai
 import json
 import os
-import subprocess
+
+from openai import OpenAI
+from datetime import datetime, timezone
 
 
-def list_jobs(openai_key: str, simple=False):
-    finetunes = openai.FineTune.list(openai_key)
-    if not simple:
-        print(finetunes)
-    else:
-        simplified = []
-        for ft in finetunes["data"]:
-            entry = {}
-            entry["fine_tuned_model"] = ft["fine_tuned_model"]
-            entry["id"] = ft["id"]
-            entry["status"] = ft["status"]
-            simplified.append(entry)
-        print(json.dumps(simplified, indent=4))
+def convert_timestamp(time: int):
+    timestamp = datetime.fromtimestamp(time, tz=timezone.utc)
+    human_readable_time = timestamp.astimezone().strftime("%Y-%m-%d %H:%M:%S")
+    return human_readable_time
 
 
-def list_models(openai_key: str, simple=False):
-    finetunes = openai.Model.list(openai_key)
-    if not simple:
-        print(finetunes)
-    else:
-        simplified = []
-        for ft in finetunes["data"]:
-            entry = {}
-            entry["id"] = ft["id"]
-            simplified.append(entry)
-        print(json.dumps(simplified, indent=4))
+def convert_in_place(obj, key: str):
+    obj[key] = convert_timestamp(obj[key])
+    return obj
 
 
-def follow_job(openai_key: str, job_id: str):
+def list_jobs(openai_key: str, full=False) -> list[dict]:
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
-    try:
-        subprocess.run([
-            "openai", "api", "fine_tunes.follow",
-            "-i", job_id
-        ])
-    except FileNotFoundError:
-        print("ERROR: You must have the `openai` python package installed to use this command.")
-
-
-def get_status(openai_key: str, job_id: str, events: bool):
-    status = openai.FineTune.retrieve(job_id, openai_key)
-    if events:
-        print(status["events"])
+    client = OpenAI()
+    finetunes = client.fine_tuning.jobs.list()
+    client.close()
+    if full:
+        return [
+            convert_in_place(
+                (
+                    convert_in_place(j.model_dump(), "finished_at")
+                    if j.finished_at
+                    else j.model_dump()
+                ),
+                "created_at",
+            )
+            for j in finetunes.data
+        ]
     else:
-        print(status)
+        return [
+            {
+                "id": j.id,
+                "model": j.model,
+                "status": j.status,
+                "created_at": convert_timestamp(j.created_at),
+                "finished_at": (
+                    convert_timestamp(j.finished_at) if j.finished_at else None
+                ),
+            }
+            for j in finetunes.data
+        ]
 
 
-def cancel_job(openai_key: str, job_id: str):
-    print(openai.FineTune.cancel(job_id, openai_key))
+def list_models(openai_key: str, full=False) -> list[dict]:
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+    client = OpenAI()
+    finetunes = client.models.list()
+    client.close()
+    if full:
+        return [convert_in_place(f.model_dump(), "created") for f in finetunes.data]
+    else:
+        return [
+            {"id": m.id, "created": convert_timestamp(m.created)}
+            for m in finetunes.data
+        ]
 
 
-def delete_model(openai_key: str, model_name: str):
-    confirm = input("Are you sure you want to delete this model? This action is not reversable. Y/N: ")
-    if confirm not in ["Y", "y", "yes", "Yes", "YES"]:
+def get_job_info(openai_key: str, job_id: str) -> dict:
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+    client = OpenAI()
+    job = client.fine_tuning.jobs.retrieve(job_id)
+    client.close()
+    return convert_in_place(
+        (
+            convert_in_place(job.model_dump(), "finished_at")
+            if job.finished_at
+            else job.model_dump()
+        ),
+        "created_at",
+    )
+
+
+def get_job_events(openai_key: str, job_id: str) -> list[dict]:
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+    client = OpenAI()
+    events = client.fine_tuning.jobs.list_events(job_id).data
+    client.close()
+    return [
+        convert_in_place(
+            j.model_dump(),
+            "created_at",
+        )
+        for j in events
+    ]
+
+
+def cancel_job(openai_key: str, job_id: str) -> dict:
+    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+    client = OpenAI()
+    client.fine_tuning.jobs.cancel(job_id)
+    client.close()
+    return {"result": f"Canceled fine-tuning job: {job_id}"}
+
+
+def delete_model(openai_key: str, model_name: str) -> dict:
+    confirm = input(
+        "Are you sure you want to delete this model? This action is not reversable. Y/N: "
+    )
+    if confirm.lower() not in ["y", "yes"]:
         print("Cancelling model deletion...")
         return
     os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
-    print(openai.Model.delete(model_name))
+    client = OpenAI()
+    deleted = client.models.delete(model_name).model_dump()
+    client.close()
+    return deleted

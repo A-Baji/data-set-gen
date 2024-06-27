@@ -1,12 +1,11 @@
 # VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose up --build
-# discordai_modelizer model list --simple
+# docker exec -it discordai-modelizer-app-1 bash
+# discordai_modelizer model list --full
 # discordai_modelizer model create -d $DISCORD_TOKEN -c $CHANNEL_ID -u "$USERNAME"
-# discordai_modelizer model delete -m "text-babbage-001"
-# discordai_modelizer job list --simple
-# discordai_modelizer job follow -j ft-V31oOgRGZaVZJvZNQFSvSRBl
-# discordai_modelizer job status -j ft-V31oOgRGZaVZJvZNQFSvSRBl --events
-# discordai_modelizer job cancel -j ft-V31oOgRGZaVZJvZNQFSvSRBl
-version: '2.4'
+# discordai_modelizer model delete -m ""
+# discordai_modelizer job list --full
+# discordai_modelizer job info -j ftjob-SDOuDLTs6a7xu9LMzdhJKo9w --events
+# discordai_modelizer job cancel -j ftjob-SDOuDLTs6a7xu9LMzdhJKo9w
 services:
   app:
     build: .
@@ -23,6 +22,7 @@ services:
     env_file: ./.env
     volumes:
       - ./discordai_modelizer:/usr/local/lib/python3.11/site-packages/discordai_modelizer
+      - ./files/:/root/.local/share/discordai/
     command:
       - sh
       - -c

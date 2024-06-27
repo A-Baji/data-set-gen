@@ -7,7 +7,9 @@ min_py_version = (3, 8)
 
 if sys.version_info < min_py_version:
     sys.exit(
-        "DiscordAI Model Gen is only supported for Python {}.{} or higher".format(*min_py_version)
+        "DiscordAI Model Gen is only supported for Python {}.{} or higher".format(
+            *min_py_version
+        )
     )
 
 here = pathlib.Path(__file__).parent.resolve()
@@ -31,7 +33,7 @@ setuptools.setup(
     ],
     entry_points={
         "console_scripts": [
-            f"{package.__name__}={package.__name__}.command_line:{package.__name__}"
+            f"{package.__name__}={package.__name__}.command_line.command_line:{package.__name__}"
         ],
     },
     package_data={package.__name__: ["DiscordChatExporter/*"]},
