@@ -6,7 +6,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ### Changed
 
-- improved cli argument handling
+- improve cli argument handling
 
 ## [3.0.0] - 06-26-2024
 
