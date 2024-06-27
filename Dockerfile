@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.12
 WORKDIR /main
 RUN apt-get install git -y
 COPY ./requirements.txt ./setup.py ./README.md /main/
