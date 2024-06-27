@@ -3,7 +3,7 @@ import json
 from discordai_modelizer import __version__ as version
 from discordai_modelizer import customize
 from discordai_modelizer import openai as openai_wrapper
-from discordai_modelizer.command_line import subparsers
+from discordai_modelizer import command_line
 
 
 def discordai_modelizer():
@@ -23,14 +23,14 @@ def discordai_modelizer():
     model_subcommand = model.add_subparsers(dest="subcommand")
     job_subcommand = job.add_subparsers(dest="subcommand")
 
-    subparsers.setup_model_list(model_subcommand)
-    subparsers.setup_model_create(model_subcommand)
-    subparsers.setup_model_delete(model_subcommand)
+    command_line.subparsers.setup_model_list(model_subcommand)
+    command_line.subparsers.setup_model_create(model_subcommand)
+    command_line.subparsers.setup_model_delete(model_subcommand)
 
-    subparsers.setup_job_list(job_subcommand)
-    subparsers.setup_job_info(job_subcommand)
-    subparsers.setup_job_events(job_subcommand)
-    subparsers.setup_job_cancel(job_subcommand)
+    command_line.subparsers.setup_job_list(job_subcommand)
+    command_line.subparsers.setup_job_info(job_subcommand)
+    command_line.subparsers.setup_job_events(job_subcommand)
+    command_line.subparsers.setup_job_cancel(job_subcommand)
 
     args = parser.parse_args()
     if args.command == "model":
