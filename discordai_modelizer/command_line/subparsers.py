@@ -2,14 +2,21 @@ def setup_model_list(model_subcommand):
     model_list = model_subcommand.add_parser(
         "list", description="List your openAi customized models"
     )
-    model_list.add_argument(
+    model_list_required_named = model_list.add_argument_group(
+        "required named arguments"
+    )
+    model_list_optional_named = model_list.add_argument_group(
+        "optional named arguments"
+    )
+
+    model_list_required_named.add_argument(
         "-o",
         "--openai-key",
         type=str,
         dest="openai_key",
-        help="The openAI API key to list the models for",
+        help="The openAI API key to list the models for. Must either be passed in as an argument or set as an environment variable",
     )
-    model_list.add_argument(
+    model_list_optional_named.add_argument(
         "--full",
         action="store_true",
         required=False,
@@ -42,7 +49,7 @@ def setup_model_create(model_subcommand):
         "--openai-key",
         type=str,
         dest="openai_key",
-        help="The openAI API key to use to create the model",
+        help="The openAI API key to use to create the model. Must either be passed in as an argument or set as an environment variable",
     )
     model_create_required_named.add_argument(
         "-c",
@@ -154,16 +161,21 @@ def setup_model_create(model_subcommand):
 
 def setup_model_delete(model_subcommand):
     model_delete = model_subcommand.add_parser(
-        "delete", description="Delete an openAI customized model"
+        "delete",
+        description="Delete an openAI customized model",
     )
-    model_delete.add_argument(
+    model_delete_required_named = model_delete.add_argument_group(
+        "required named arguments"
+    )
+
+    model_delete_required_named.add_argument(
         "-o",
         "--openai-key",
         type=str,
         dest="openai_key",
-        help="The openAI API key associated with the model to delete",
+        help="The openAI API key associated with the model to delete. Must either be passed in as an argument or set as an environment variable",
     )
-    model_delete.add_argument(
+    model_delete_required_named.add_argument(
         "-m",
         "--model-id",
         type=str,
@@ -176,14 +188,17 @@ def setup_job_list(job_subcommand):
     job_list = job_subcommand.add_parser(
         "list", description="List your openAI customization jobs"
     )
-    job_list.add_argument(
+    job_list_required_named = job_list.add_argument_group("required named arguments")
+    job_list_optional_named = job_list.add_argument_group("optional named arguments")
+
+    job_list_required_named.add_argument(
         "-o",
         "--openai-key",
         type=str,
         dest="openai_key",
-        help="The openAI API key to list the jobs for",
+        help="The openAI API key to list the jobs for. Must either be passed in as an argument or set as an environment variable",
     )
-    job_list.add_argument(
+    job_list_optional_named.add_argument(
         "--full",
         action="store_true",
         required=False,
@@ -196,14 +211,16 @@ def setup_job_info(job_subcommand):
     job_info = job_subcommand.add_parser(
         "info", description="Get an openAI customization job's info"
     )
-    job_info.add_argument(
+    job_info_required_named = job_info.add_argument_group("required named arguments")
+
+    job_info_required_named.add_argument(
         "-o",
         "--openai-key",
         type=str,
         dest="openai_key",
-        help="The openAI API key associated with the job to see the info for",
+        help="The openAI API key associated with the job to see the info for. Must either be passed in as an argument or set as an environment variable",
     )
-    job_info.add_argument(
+    job_info_required_named.add_argument(
         "-j",
         "--job-id",
         type=str,
@@ -216,14 +233,18 @@ def setup_job_events(job_subcommand):
     job_events = job_subcommand.add_parser(
         "events", description="Get an openAI customization job's events"
     )
-    job_events.add_argument(
+    job_events_required_named = job_events.add_argument_group(
+        "required named arguments"
+    )
+
+    job_events_required_named.add_argument(
         "-o",
         "--openai-key",
         type=str,
         dest="openai_key",
-        help="The openAI API key associated with the job to see the events for",
+        help="The openAI API key associated with the job to see the events for. Must either be passed in as an argument or set as an environment variable",
     )
-    job_events.add_argument(
+    job_events_required_named.add_argument(
         "-j",
         "--job-id",
         type=str,
@@ -236,14 +257,18 @@ def setup_job_cancel(job_subcommand):
     job_cancel = job_subcommand.add_parser(
         "cancel", description="Cancel an openAI customization job"
     )
-    job_cancel.add_argument(
+    job_cancel_required_named = job_cancel.add_argument_group(
+        "required named arguments"
+    )
+
+    job_cancel_required_named.add_argument(
         "-o",
         "--openai-key",
         type=str,
         dest="openai_key",
-        help="The openAI API key associated with the job to cancel",
+        help="The openAI API key associated with the job to cancel. Must either be passed in as an argument or set as an environment variable",
     )
-    job_cancel.add_argument(
+    job_cancel_required_named.add_argument(
         "-j",
         "--job-id",
         type=str,
