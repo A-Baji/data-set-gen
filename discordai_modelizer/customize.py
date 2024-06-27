@@ -92,7 +92,6 @@ def create_model(
             full_logs_path,
             channel_id,
             user_id,
-            base_model,
             thought_time,
             thought_max,
             thought_min,

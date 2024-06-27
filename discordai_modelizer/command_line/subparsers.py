@@ -1,27 +1,4 @@
-import argparse
-import json
-from discordai_modelizer import __version__ as version
-from discordai_modelizer import customize
-from discordai_modelizer import openai as openai_wrapper
-
-
-def discordai_modelizer():
-    parser = argparse.ArgumentParser(
-        prog="discordai_modelizer", description="DiscordAI Modelizer CLI"
-    )
-    parser.add_argument(
-        "-V", "--version", action="version", version=f"discordai {version}"
-    )
-    command = parser.add_subparsers(dest="command")
-
-    model = command.add_parser(
-        "model", description="Commands related to your openAI models"
-    )
-    job = command.add_parser("job", description="Commands related to your openAI jobs")
-
-    model_subcommand = model.add_subparsers(dest="subcommand")
-    job_subcommand = job.add_subparsers(dest="subcommand")
-
+def setup_model_list(model_subcommand):
     model_list = model_subcommand.add_parser(
         "list", description="List your openAi customized models"
     )
@@ -40,6 +17,8 @@ def discordai_modelizer():
         help="Return the full details of all the models",
     )
 
+
+def setup_model_create(model_subcommand):
     model_create = model_subcommand.add_parser(
         "create",
         description="Create a new openAI customized model by downloading the specified chat logs, parsing them into a usable dataset, and then training a customized model using openai",
@@ -47,6 +26,10 @@ def discordai_modelizer():
     model_create_required_named = model_create.add_argument_group(
         "required named arguments"
     )
+    model_create_optional_named = model_create.add_argument_group(
+        "optional named arguments"
+    )
+
     model_create_required_named.add_argument(
         "-d",
         "--discord-token",
@@ -73,11 +56,9 @@ def discordai_modelizer():
         "--user",
         type=str,
         dest="user",
-        help="The username of the discord user you want to use",
+        help="The unique username of the discord user you want to use",
     )
-    model_create_optional_named = model_create.add_argument_group(
-        "optional named arguments"
-    )
+
     model_create_optional_named.add_argument(
         "-b",
         "--base-model",
@@ -85,7 +66,7 @@ def discordai_modelizer():
         default="none",
         required=False,
         dest="base_model",
-        help="The base model to use for customization. If none, then skips training step: DEFAULT=none",
+        help="The base model to use for customization, where `davinci` is the more advanced model and is recommended, while `babbage` is a simpler model and should be reserved for testing since it is cheaper, and `none`, skips the training step: DEFAULT=none",
     )
     model_create_optional_named.add_argument(
         "--ttime",
@@ -130,7 +111,7 @@ def discordai_modelizer():
         default=0,
         required=False,
         dest="offset",
-        help="The offset by line number for where to start selecting lines for the dataset: DEFAULT=0",
+        help="The offset by line index starting at 0 for where to start selecting lines for the dataset: DEFAULT=0",
     )
     model_create_optional_named.add_argument(
         "-s",
@@ -142,7 +123,7 @@ def discordai_modelizer():
         help="The method to select lines for the dataset, where `sequential` mode will select lines in chronological order, while `distributed` mode will select an even distribution of lines: DEFAULT=sequential",
     )
     model_create_optional_named.add_argument(
-        "--reverse",
+        "--reverse_lines",
         action="store_true",
         required=False,
         dest="reverse",
@@ -170,6 +151,8 @@ def discordai_modelizer():
         help="Use an existing dataset that may have been manually revised",
     )
 
+
+def setup_model_delete(model_subcommand):
     model_delete = model_subcommand.add_parser(
         "delete", description="Delete an openAI customized model"
     )
@@ -188,6 +171,8 @@ def discordai_modelizer():
         help="Target model id",
     )
 
+
+def setup_job_list(job_subcommand):
     job_list = job_subcommand.add_parser(
         "list", description="List your openAI customization jobs"
     )
@@ -206,6 +191,8 @@ def discordai_modelizer():
         help="Return the full details of all the jobs",
     )
 
+
+def setup_job_info(job_subcommand):
     job_info = job_subcommand.add_parser(
         "info", description="Get an openAI customization job's info"
     )
@@ -224,6 +211,8 @@ def discordai_modelizer():
         help="Target job id",
     )
 
+
+def setup_job_events(job_subcommand):
     job_events = job_subcommand.add_parser(
         "events", description="Get an openAI customization job's events"
     )
@@ -242,6 +231,8 @@ def discordai_modelizer():
         help="Target job id",
     )
 
+
+def setup_job_cancel(job_subcommand):
     job_cancel = job_subcommand.add_parser(
         "cancel", description="Cancel an openAI customization job"
     )
@@ -259,45 +250,3 @@ def discordai_modelizer():
         dest="job_id",
         help="Target job id",
     )
-
-    args = parser.parse_args()
-    if args.command == "model":
-        if args.subcommand == "list":
-            display(openai_wrapper.list_models(args.openai_key, args.full))
-        if args.subcommand == "create":
-            customize.create_model(
-                args.discord_token,
-                args.openai_key,
-                args.channel,
-                args.user,
-                thought_time=args.thought_time,
-                thought_max=args.thought_max,
-                thought_min=args.thought_min,
-                max_entry_count=args.max_entries,
-                offset=args.offset,
-                select_mode=args.select_mode,
-                reverse=args.reverse,
-                base_model=args.base_model,
-                clean=args.dirty,
-                redownload=args.redownload,
-                use_existing=args.use_existing,
-            )
-        if args.subcommand == "delete":
-            display(openai_wrapper.delete_model(args.openai_key, args.model_id))
-    elif args.command == "job":
-        if args.subcommand == "list":
-            display(openai_wrapper.list_jobs(args.openai_key, args.full))
-        if args.subcommand == "info":
-            display(openai_wrapper.get_job_info(args.openai_key, args.job_id))
-        if args.subcommand == "events":
-            display(openai_wrapper.get_job_events(args.openai_key, args.job_id))
-        if args.subcommand == "cancel":
-            display(openai_wrapper.cancel_job(args.openai_key, args.job_id))
-
-
-def display(obj):
-    print(json.dumps(obj, indent=4))
-
-
-if __name__ == "__main__":
-    discordai_modelizer()
