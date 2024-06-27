@@ -50,6 +50,7 @@ def create_model(
                 None,
                 "Your Discord bot token must either be passed in as an argument or set as an environment variable",
             )
+
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print(
             "INFO: This may take a few minutes to hours depending on the message count of the channel"

@@ -41,6 +41,7 @@ def discordai_modelizer():
             None,
             "Your OpenaAI API key must either be passed in as an argument or set as an environment variable",
         )
+
     if args.command == "model":
         if args.subcommand == "list":
             display(openai_wrapper.list_models(os.environ["OPENAI_API_KEY"], args.full))
