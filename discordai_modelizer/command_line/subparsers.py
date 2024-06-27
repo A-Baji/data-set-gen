@@ -1,3 +1,6 @@
+from argparse import _SubParsersAction, ArgumentParser
+
+
 def setup_model_list(model_subcommand):
     model_list = model_subcommand.add_parser(
         "list", description="List your openAi customized models"
@@ -42,7 +45,7 @@ def setup_model_create(model_subcommand):
         "--discord-token",
         type=str,
         dest="discord_token",
-        help="The discord token for your bot",
+        help="The discord token for your bot. Must either be passed in as an argument or set as an environment variable",
     )
     model_create_required_named.add_argument(
         "-o",
@@ -54,6 +57,7 @@ def setup_model_create(model_subcommand):
     model_create_required_named.add_argument(
         "-c",
         "--channel",
+        required=True,
         type=str,
         dest="channel",
         help="The ID of the discord channel you want to use",
@@ -61,6 +65,7 @@ def setup_model_create(model_subcommand):
     model_create_required_named.add_argument(
         "-u",
         "--user",
+        required=True,
         type=str,
         dest="user",
         help="The unique username of the discord user you want to use",
@@ -178,6 +183,7 @@ def setup_model_delete(model_subcommand):
     model_delete_required_named.add_argument(
         "-m",
         "--model-id",
+        required=True,
         type=str,
         dest="model_id",
         help="Target model id",
@@ -223,6 +229,7 @@ def setup_job_info(job_subcommand):
     job_info_required_named.add_argument(
         "-j",
         "--job-id",
+        required=True,
         type=str,
         dest="job_id",
         help="Target job id",
@@ -247,6 +254,7 @@ def setup_job_events(job_subcommand):
     job_events_required_named.add_argument(
         "-j",
         "--job-id",
+        required=True,
         type=str,
         dest="job_id",
         help="Target job id",
@@ -271,6 +279,7 @@ def setup_job_cancel(job_subcommand):
     job_cancel_required_named.add_argument(
         "-j",
         "--job-id",
+        required=True,
         type=str,
         dest="job_id",
         help="Target job id",

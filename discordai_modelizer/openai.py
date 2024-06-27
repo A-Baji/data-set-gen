@@ -16,8 +16,17 @@ def convert_in_place(obj, key: str):
     return obj
 
 
-def list_jobs(openai_key: str, full=False) -> list[dict]:
-    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+def set_openai_api_key(key: str):
+    try:
+        os.environ["OPENAI_API_KEY"] = key or os.environ["OPENAI_API_KEY"]
+    except KeyError:
+        raise ValueError(
+            "Your OpenaAI API key must either be passed in as an argument or set as an environment variable",
+        )
+
+
+def list_jobs(openai_key: str = None, full=False) -> list[dict]:
+    set_openai_api_key(openai_key)
     client = OpenAI()
     finetunes = client.fine_tuning.jobs.list()
     client.close()
@@ -48,8 +57,8 @@ def list_jobs(openai_key: str, full=False) -> list[dict]:
         ]
 
 
-def list_models(openai_key: str, full=False) -> list[dict]:
-    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+def list_models(openai_key: str = None, full=False) -> list[dict]:
+    set_openai_api_key(openai_key)
     client = OpenAI()
     finetunes = client.models.list()
     client.close()
@@ -62,8 +71,8 @@ def list_models(openai_key: str, full=False) -> list[dict]:
         ]
 
 
-def get_job_info(openai_key: str, job_id: str) -> dict:
-    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+def get_job_info(job_id: str, openai_key: str = None) -> dict:
+    set_openai_api_key(openai_key)
     client = OpenAI()
     job = client.fine_tuning.jobs.retrieve(job_id)
     client.close()
@@ -77,8 +86,8 @@ def get_job_info(openai_key: str, job_id: str) -> dict:
     )
 
 
-def get_job_events(openai_key: str, job_id: str) -> list[dict]:
-    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+def get_job_events(job_id: str, openai_key: str = None) -> list[dict]:
+    set_openai_api_key(openai_key)
     client = OpenAI()
     events = client.fine_tuning.jobs.list_events(job_id).data
     client.close()
@@ -91,22 +100,22 @@ def get_job_events(openai_key: str, job_id: str) -> list[dict]:
     ]
 
 
-def cancel_job(openai_key: str, job_id: str) -> dict:
-    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+def cancel_job(job_id: str, openai_key: str = None) -> dict:
+    set_openai_api_key(openai_key)
     client = OpenAI()
     client.fine_tuning.jobs.cancel(job_id)
     client.close()
     return {"result": f"Canceled fine-tuning job: {job_id}"}
 
 
-def delete_model(openai_key: str, model_name: str) -> dict:
+def delete_model(model_name: str, openai_key: str = None) -> dict:
     confirm = input(
         "Are you sure you want to delete this model? This action is not reversable. Y/N: "
     )
     if confirm.lower() not in ["y", "yes"]:
         print("Cancelling model deletion...")
         return
-    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
+    set_openai_api_key(openai_key)
     client = OpenAI()
     deleted = client.models.delete(model_name).model_dump()
     client.close()

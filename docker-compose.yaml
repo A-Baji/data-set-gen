@@ -1,7 +1,7 @@
 # VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose up --build
 # docker exec -it discordai-modelizer-app-1 bash
 # discordai_modelizer model list --full
-# discordai_modelizer model create -d $DISCORD_TOKEN -c $CHANNEL_ID -u "$USERNAME"
+# discordai_modelizer model create -d $DISCORD_BOT_TOKEN -c $CHANNEL_ID -u "$USERNAME"
 # discordai_modelizer model delete -m ""
 # discordai_modelizer job list --full
 # discordai_modelizer job info -j ftjob-SDOuDLTs6a7xu9LMzdhJKo9w --events
@@ -14,14 +14,14 @@ services:
     network_mode: host
     working_dir: /main
     environment:
-      - DISCORD_TOKEN
+      - DISCORD_BOT_TOKEN
       - OPENAI_API_KEY
       - CHANNEL_ID
       - USERNAME
       - PYTHONUNBUFFERED=1
     env_file: ./.env
     volumes:
-      - ./discordai_modelizer:/usr/local/lib/python3.11/site-packages/discordai_modelizer
+      - ./discordai_modelizer:/usr/local/lib/python3.12/site-packages/discordai_modelizer
       - ./files/:/root/.local/share/discordai/
     command:
       - sh
