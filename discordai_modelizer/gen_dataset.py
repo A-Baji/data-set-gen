@@ -1,4 +1,3 @@
-from math import ceil
 from appdirs import user_data_dir
 from re import sub
 from json import load, dumps
