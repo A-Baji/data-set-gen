@@ -21,8 +21,6 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - support for python 3.8
 
-- support for python 3.12
-
 ## [2.0.1] - 06-15-2023
 
 ### Changed
