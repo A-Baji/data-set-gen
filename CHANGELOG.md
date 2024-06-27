@@ -4,6 +4,10 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ## [3.0.0] - 06-26-2024
 
+### Added
+
+- support for python 3.12
+
 ### Changed
 
 - update `DiscordChatExporter` to v2.43.3
@@ -12,6 +16,12 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 - update some default CLI command argument values
 - update some CLI help descriptions
 - major refactors
+
+### Removed
+
+- support for python 3.8
+
+- support for python 3.12
 
 ## [2.0.1] - 06-15-2023
 
