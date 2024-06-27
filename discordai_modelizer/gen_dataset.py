@@ -13,10 +13,9 @@ def parse_logs(
     file: str,
     channel: str,
     user: str,
-    model: str,
-    thought_time=10,
+    thought_time=5,
     thought_max: int = None,
-    thought_min=4,
+    thought_min=6,
 ):
 
     def validate_thought(thought: str) -> bool:

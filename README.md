@@ -26,6 +26,8 @@ Commands related to your openAI jobs
 * List your openAI customization jobs
 #### `discordai_modelizer job info`
 * Get an openAI customization job's info
+#### `discordai_modelizer job event`
+* Get an openAI customization job's events
 #### `discordai_modelizer job cancel`
 * Cancel an openAI customization job
 
