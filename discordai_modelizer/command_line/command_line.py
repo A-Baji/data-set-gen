@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 from discordai_modelizer import __version__ as version
 from discordai_modelizer import customize
 from discordai_modelizer import openai as openai_wrapper
@@ -33,13 +34,21 @@ def discordai_modelizer():
     subparsers.setup_job_cancel(job_subcommand)
 
     args = parser.parse_args()
+    try:
+        os.environ["OPENAI_API_KEY"] = args.openai_key or os.environ["OPENAI_API_KEY"]
+    except KeyError:
+        raise argparse.ArgumentError(
+            None,
+            "Your OpenaAI API key must either be passed in as an argument or set as an environment variable",
+        )
+
     if args.command == "model":
         if args.subcommand == "list":
-            display(openai_wrapper.list_models(args.openai_key, args.full))
-        if args.subcommand == "create":
+            display(openai_wrapper.list_models(os.environ["OPENAI_API_KEY"], args.full))
+        elif args.subcommand == "create":
             customize.create_model(
                 args.discord_token,
-                args.openai_key,
+                os.environ["OPENAI_API_KEY"],
                 args.channel,
                 args.user,
                 thought_time=args.thought_time,
@@ -54,17 +63,38 @@ def discordai_modelizer():
                 redownload=args.redownload,
                 use_existing=args.use_existing,
             )
-        if args.subcommand == "delete":
-            display(openai_wrapper.delete_model(args.openai_key, args.model_id))
+        elif args.subcommand == "delete":
+            display(
+                openai_wrapper.delete_model(args.model_id, os.environ["OPENAI_API_KEY"])
+            )
+        else:
+            raise argparse.ArgumentError(
+                model_subcommand,
+                "Must choose a command from `list`, `create`, or `delete`",
+            )
     elif args.command == "job":
         if args.subcommand == "list":
-            display(openai_wrapper.list_jobs(args.openai_key, args.full))
-        if args.subcommand == "info":
-            display(openai_wrapper.get_job_info(args.openai_key, args.job_id))
-        if args.subcommand == "events":
-            display(openai_wrapper.get_job_events(args.openai_key, args.job_id))
-        if args.subcommand == "cancel":
-            display(openai_wrapper.cancel_job(args.openai_key, args.job_id))
+            display(openai_wrapper.list_jobs(os.environ["OPENAI_API_KEY"], args.full))
+        elif args.subcommand == "info":
+            display(
+                openai_wrapper.get_job_info(args.job_id, os.environ["OPENAI_API_KEY"])
+            )
+        elif args.subcommand == "events":
+            display(
+                openai_wrapper.get_job_events(args.job_id, os.environ["OPENAI_API_KEY"])
+            )
+        elif args.subcommand == "cancel":
+            display(
+                openai_wrapper.cancel_job(args.job_id, os.environ["OPENAI_API_KEY"])
+            )
+            display(
+                openai_wrapper.delete_model(args.model_id, os.environ["OPENAI_API_KEY"])
+            )
+        else:
+            raise argparse.ArgumentError(
+                job_subcommand,
+                "Must choose a command from `info`, `events`, or `cancel`",
+            )
 
 
 def display(obj):

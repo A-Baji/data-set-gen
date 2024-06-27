@@ -5,6 +5,7 @@ import shutil
 import pathlib
 
 from openai import OpenAI
+from argparse import ArgumentError
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
 
 MODEL_MAP = {
@@ -30,7 +31,6 @@ def create_model(
     redownload=False,
     use_existing=False,
 ):
-    os.environ["OPENAI_API_KEY"] = openai_key or os.environ["OPENAI_API_KEY"]
     client = OpenAI()
     channel_user = f"{channel_id[:4]}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
@@ -43,6 +43,14 @@ def create_model(
 
     # Download logs
     if (not os.path.isfile(full_logs_path) or redownload) and not use_existing:
+        try:
+            bot_token = bot_token or os.environ["DISCORD_BOT_TOKEN"]
+        except KeyError:
+            raise ArgumentError(
+                None,
+                "Your Discord bot token must either be passed in as an argument or set as an environment variable",
+            )
+
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print(
             "INFO: This may take a few minutes to hours depending on the message count of the channel"
