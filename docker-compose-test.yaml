@@ -1,0 +1,26 @@
+# VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose -f docker-compose-test.yaml --env-file .env.test up --build
+# docker exec -it discordai-modelizer-tests-1 bash
+services:
+  tests:
+    build: .
+    image: discord-ai/discordai_modelizer:${VERSION}
+    privileged: true
+    network_mode: host
+    working_dir: /main
+    environment:
+      - DISCORD_BOT_TOKEN
+      - OPENAI_API_KEY
+      - CHANNEL_ID
+      - USERNAME
+      - PYTHONUNBUFFERED=1
+    env_file: test.env
+    volumes:
+      - ./discordai_modelizer:/usr/local/lib/python3.12/site-packages/discordai_modelizer
+      - ./tests:/main/tests
+      - ./files/:/root/.local/share/discordai/
+    command:
+      - sh
+      - -c
+      - |
+        pip install pytest --root-user-action ignore
+        tail -f /dev/null
