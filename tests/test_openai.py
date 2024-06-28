@@ -3,13 +3,8 @@ from . import expected_values
 
 
 def list_dict_comp(x, y):
-    assert sorted(x, key=lambda x: sorted(x.items())) == sorted(
-        y, key=lambda x: sorted(x.items())
-    )
-
-
-def dict_comp(x, y):
-    return sorted(x) == sorted(y)
+    for d1, d2 in zip(x, y):
+        assert d1 == d2
 
 
 def test_model_list():
@@ -34,7 +29,7 @@ def test_job_list_full():
 
 def test_job_info():
     info = openai.get_job_info("ftjob-i2IyeV2xbLCSrYq45kTKSdwE")
-    dict_comp(expected_values.job_info_expected, info)
+    assert expected_values.job_info_expected == info
 
 
 def test_job_events():
@@ -44,4 +39,4 @@ def test_job_events():
 
 def test_job_cancel():
     cancel = openai.cancel_job("ftjob-i2IyeV2xbLCSrYq45kTKSdwE")
-    dict_comp(expected_values.job_cancel_expected, cancel)
+    assert expected_values.job_cancel_expected == cancel
