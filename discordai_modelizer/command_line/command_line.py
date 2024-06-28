@@ -87,9 +87,6 @@ def discordai_modelizer():
             display(
                 openai_wrapper.cancel_job(args.job_id, os.environ["OPENAI_API_KEY"])
             )
-            display(
-                openai_wrapper.delete_model(args.model_id, os.environ["OPENAI_API_KEY"])
-            )
         else:
             raise argparse.ArgumentError(
                 job_subcommand,
