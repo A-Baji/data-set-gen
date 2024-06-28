@@ -7,6 +7,7 @@ import pathlib
 from openai import OpenAI
 from argparse import ArgumentError
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
+from discordai_modelizer.openai import set_openai_api_key
 
 MODEL_MAP = {
     "davinci": "davinci-002",
@@ -15,10 +16,10 @@ MODEL_MAP = {
 
 
 def create_model(
-    bot_token: str,
-    openai_key: str,
     channel_id: str,
     user_id: str,
+    bot_token: str = None,
+    openai_key: str = None,
     thought_time=10,
     thought_max: int = None,
     thought_min=4,
@@ -31,6 +32,7 @@ def create_model(
     redownload=False,
     use_existing=False,
 ):
+    set_openai_api_key(openai_key)
     client = OpenAI()
     channel_user = f"{channel_id[:4]}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
@@ -140,9 +142,6 @@ def create_model(
 
     # Clean up generated files
     if clean and not use_existing:
-        try:
-            os.remove(full_dataset_path)
-        except FileNotFoundError:
-            pass
+        full_dataset_path.unlink()
 
     client.close()

@@ -1,4 +1,3 @@
-import json
 import os
 
 from openai import OpenAI
@@ -17,11 +16,11 @@ def convert_in_place(obj, key: str):
 
 
 def set_openai_api_key(key: str):
-    try:
-        os.environ["OPENAI_API_KEY"] = key or os.environ["OPENAI_API_KEY"]
-    except KeyError:
+    if key:
+        os.environ["OPENAI_API_KEY"] = key
+    elif "OPENAI_API_KEY" not in os.environ:
         raise ValueError(
-            "Your OpenaAI API key must either be passed in as an argument or set as an environment variable",
+            "Your OpenAI API key must either be passed in as an argument or set as an environment variable",
         )
 
 
