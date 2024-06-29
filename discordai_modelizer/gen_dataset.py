@@ -81,7 +81,7 @@ def parse_logs(
         thought = build_thought("", messages[0])
         for i, msg in enumerate(messages[1::]):
             if msg["content"]:
-                prev_timestamp = parser.parse(messages[i - 1]["timestamp"])
+                prev_timestamp = parser.parse(messages[i]["timestamp"])
                 curr_timestamp = parser.parse(msg["timestamp"])
                 differentiation = (curr_timestamp - prev_timestamp) / timedelta(
                     milliseconds=1
