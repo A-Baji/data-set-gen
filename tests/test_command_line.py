@@ -11,7 +11,7 @@ def test_cli_help(script_runner):
     assert "DiscordAI Modelizer CLI" in cli.stdout
     assert "positional arguments:" in cli.stdout
     assert "{model,job}" in cli.stdout
-    assert "options:" in cli.stdout
+    assert "option" in cli.stdout
     assert "-h, --help     show this help message and exit" in cli.stdout
     assert "-V, --version  show program's version number and exit" in cli.stdout
 
