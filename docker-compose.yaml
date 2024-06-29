@@ -14,8 +14,6 @@ services:
       args:
         - PY_VER
     image: discord-ai/discordai_modelizer:py${PY_VER}-v${VERSION}
-    privileged: true
-    network_mode: host
     working_dir: /main
     environment:
       - DISCORD_BOT_TOKEN
