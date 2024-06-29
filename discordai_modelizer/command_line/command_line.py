@@ -34,7 +34,8 @@ def discordai_modelizer():
     subparsers.setup_job_cancel(job_subcommand)
 
     args = parser.parse_args()
-    openai_wrapper.set_openai_api_key(args.openai_key)
+    if hasattr(args, "openai_key"):
+        openai_wrapper.set_openai_api_key(args.openai_key)
 
     if args.command == "model":
         if args.subcommand == "list":
