@@ -3,11 +3,11 @@ import pathlib
 import sys
 import discordai_modelizer as package
 
-min_py_version = (3, 8)
+min_py_version = (3, 9)
 
 if sys.version_info < min_py_version:
     sys.exit(
-        "DiscordAI Model Gen is only supported for Python {}.{} or higher".format(
+        "DiscordAI Modelizer is only supported for Python {}.{} or higher".format(
             *min_py_version
         )
     )
@@ -21,10 +21,10 @@ setuptools.setup(
     version=package.__version__,
     author="Adib Baji",
     author_email="bidabaji@gmail.com",
-    description="A package that utilizes openAI to create custom AI models out of your chat history",
+    description="A package that utilizes openAI to create custom AI models out of your Discord chat history",
     long_description=pathlib.Path("README.md").read_text(),
     long_description_content_type="text/markdown",
-    url="https://github.com/A-Baji/discordAI-model-gen",
+    url="https://github.com/A-Baji/discordAI-modelizer",
     packages=setuptools.find_packages(exclude=["tests*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
