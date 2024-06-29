@@ -24,7 +24,7 @@ def create_model(
     thought_max: int = None,
     thought_min=4,
     max_entry_count=1000,
-    offset="start",
+    offset=0,
     select_mode="sequential",
     base_model="none",
     reverse=False,
