@@ -1,6 +1,6 @@
 import os
 
-from openai import OpenAI
+from openai import OpenAI, PermissionDeniedError
 from datetime import datetime, timezone
 
 
@@ -116,6 +116,11 @@ def delete_model(model_name: str, openai_key: str = None) -> dict:
         return
     set_openai_api_key(openai_key)
     client = OpenAI()
-    deleted = client.models.delete(model_name).model_dump()
+    try:
+        deleted = client.models.delete(model_name).model_dump()
+    except PermissionDeniedError:
+        deleted = {
+            "error": "You have insufficient permissions for this operation. Missing scopes: api.delete"
+        }
     client.close()
     return deleted

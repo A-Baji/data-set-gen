@@ -3,7 +3,6 @@ import pytest
 
 from re import escape
 from io import StringIO
-from openai import PermissionDeniedError
 from discordai_modelizer import openai as openai_wrapper
 from . import expected_values
 from .conftest import list_dict_comp
@@ -54,11 +53,8 @@ def test_job_cancel():
 
 def test_delete_model(monkeypatch):
     monkeypatch.setattr("sys.stdin", StringIO("Y\n"))
-    with pytest.raises(
-        PermissionDeniedError,
-        match="You have insufficient permissions for this operation. Missing scopes: api.delete",
-    ):
-        openai_wrapper.delete_model("whisper-1")
+    delete = openai_wrapper.delete_model("whisper-1")
+    assert expected_values.delete_model_expected == delete
 
 
 def test_delete_model_cancel(monkeypatch, capsys):
