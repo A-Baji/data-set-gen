@@ -4,17 +4,8 @@ import pytest
 
 from json import load
 from discordai_modelizer import customize
-from discordai_modelizer.openai import set_openai_api_key
 from . import expected_values
 from .conftest import FULL_LOGS_PATH, FULL_DATASET_PATH, CHANNEL_ID, USER
-
-
-@pytest.fixture(scope="function")
-def set_bad_openai_key():
-    key = os.environ["OPENAI_API_KEY"]
-    set_openai_api_key("BAD_KEY")
-    yield
-    set_openai_api_key(key)
 
 
 @pytest.fixture(scope="function")
@@ -74,7 +65,6 @@ def test_not_use_existing_dirty(capsys, default_file_output):
 
 
 def test_training(capsys, default_file_output, set_bad_openai_key):
-    set_openai_api_key("BAD_KEY")
     with pytest.raises(AuthenticationError):
         customize.create_model(CHANNEL_ID, USER, base_model="babbage")
     stdout = capsys.readouterr()
