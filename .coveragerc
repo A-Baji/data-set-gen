@@ -1,0 +1,3 @@
+[run]
+omit =
+    /usr/local/lib/python3.12/site-packages/discordai_modelizer/command_line/*

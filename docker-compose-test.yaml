@@ -17,9 +17,11 @@ services:
     volumes:
       - ./discordai_modelizer:/usr/local/lib/python3.12/site-packages/discordai_modelizer
       - ./tests:/main/tests
+      - .coveragerc:/main/.coveragerc
     command:
       - sh
       - -c
       - |
-        pip install pytest --root-user-action ignore
+        pip install pytest pytest-cov --root-user-action ignore
+        pytest --cov-config=.coveragerc --cov-report term-missing --cov=discordai_modelizer tests
         tail -f /dev/null
