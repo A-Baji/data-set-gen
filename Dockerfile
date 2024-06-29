@@ -1,4 +1,5 @@
-FROM python:3.12
+ARG PY_VER
+FROM python:${PY_VER}
 WORKDIR /main
 RUN apt-get install git -y
 COPY ./requirements.txt ./setup.py ./README.md /main/

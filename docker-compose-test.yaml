@@ -1,9 +1,13 @@
-# VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose -f docker-compose-test.yaml --env-file test.env up --build
+# PY_VER=3.12 VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose -f docker-compose-test.yaml --env-file test.env up --build
 # docker exec -it discordai-modelizer-tests-1 bash
 services:
   tests:
-    build: .
-    image: discord-ai/discordai_modelizer:${VERSION}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - PY_VER
+    image: discord-ai/discordai_modelizer:py${PY_VER}-v${VERSION}
     privileged: true
     network_mode: host
     working_dir: /main
@@ -15,7 +19,7 @@ services:
       - PYTHONUNBUFFERED=1
     env_file: test.env
     volumes:
-      - ./discordai_modelizer:/usr/local/lib/python3.12/site-packages/discordai_modelizer
+      - ./discordai_modelizer:/usr/local/lib/python${PY_VER}/site-packages/discordai_modelizer
       - ./tests:/main/tests
     command:
       - sh
@@ -23,4 +27,4 @@ services:
       - |
         pip install pytest pytest-cov pytest-console-scripts --root-user-action ignore
         pytest --cov-report term-missing --cov=discordai_modelizer tests
-        tail -f /dev/null
+        # tail -f /dev/null
