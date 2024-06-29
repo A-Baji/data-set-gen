@@ -7,6 +7,7 @@ import pathlib
 from openai import OpenAI
 from argparse import ArgumentError
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
+from discordai_modelizer.openai import set_openai_api_key
 
 MODEL_MAP = {
     "davinci": "davinci-002",
@@ -14,16 +15,25 @@ MODEL_MAP = {
 }
 
 
+def set_bot_token(token):
+    if token:
+        os.environ["DISCORD_BOT_TOKEN"] = token
+    elif "DISCORD_BOT_TOKEN" not in os.environ:
+        raise ValueError(
+            "Your Discord bot token must either be passed in as an argument or set as an environment variable",
+        )
+
+
 def create_model(
-    bot_token: str,
-    openai_key: str,
     channel_id: str,
     user_id: str,
+    bot_token: str = None,
+    openai_key: str = None,
     thought_time=10,
     thought_max: int = None,
     thought_min=4,
     max_entry_count=1000,
-    offset="start",
+    offset=0,
     select_mode="sequential",
     base_model="none",
     reverse=False,
@@ -31,6 +41,7 @@ def create_model(
     redownload=False,
     use_existing=False,
 ):
+    set_openai_api_key(openai_key)
     client = OpenAI()
     channel_user = f"{channel_id[:4]}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
@@ -43,13 +54,7 @@ def create_model(
 
     # Download logs
     if (not os.path.isfile(full_logs_path) or redownload) and not use_existing:
-        try:
-            bot_token = bot_token or os.environ["DISCORD_BOT_TOKEN"]
-        except KeyError:
-            raise ArgumentError(
-                None,
-                "Your Discord bot token must either be passed in as an argument or set as an environment variable",
-            )
+        set_bot_token(bot_token)
 
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print(
@@ -71,7 +76,7 @@ def create_model(
                 "-c",
                 channel_id,
                 "-t",
-                bot_token,
+                os.environ["DISCORD_BOT_TOKEN"],
                 "-o",
                 f"{channel_id}_logs.json",
                 "-f",
@@ -140,9 +145,6 @@ def create_model(
 
     # Clean up generated files
     if clean and not use_existing:
-        try:
-            os.remove(full_dataset_path)
-        except FileNotFoundError:
-            pass
+        full_dataset_path.unlink()
 
     client.close()

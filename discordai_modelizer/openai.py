@@ -1,7 +1,6 @@
-import json
 import os
 
-from openai import OpenAI
+from openai import OpenAI, PermissionDeniedError
 from datetime import datetime, timezone
 
 
@@ -17,11 +16,11 @@ def convert_in_place(obj, key: str):
 
 
 def set_openai_api_key(key: str):
-    try:
-        os.environ["OPENAI_API_KEY"] = key or os.environ["OPENAI_API_KEY"]
-    except KeyError:
+    if key:
+        os.environ["OPENAI_API_KEY"] = key
+    elif "OPENAI_API_KEY" not in os.environ:
         raise ValueError(
-            "Your OpenaAI API key must either be passed in as an argument or set as an environment variable",
+            "Your OpenAI API key must either be passed in as an argument or set as an environment variable",
         )
 
 
@@ -117,6 +116,11 @@ def delete_model(model_name: str, openai_key: str = None) -> dict:
         return
     set_openai_api_key(openai_key)
     client = OpenAI()
-    deleted = client.models.delete(model_name).model_dump()
+    try:
+        deleted = client.models.delete(model_name).model_dump()
+    except PermissionDeniedError:
+        deleted = {
+            "error": "You have insufficient permissions for this operation. Missing scopes: api.delete"
+        }
     client.close()
     return deleted

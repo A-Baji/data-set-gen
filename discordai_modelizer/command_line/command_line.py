@@ -34,23 +34,18 @@ def discordai_modelizer():
     subparsers.setup_job_cancel(job_subcommand)
 
     args = parser.parse_args()
-    try:
-        os.environ["OPENAI_API_KEY"] = args.openai_key or os.environ["OPENAI_API_KEY"]
-    except KeyError:
-        raise argparse.ArgumentError(
-            None,
-            "Your OpenaAI API key must either be passed in as an argument or set as an environment variable",
-        )
+    if hasattr(args, "openai_key"):
+        openai_wrapper.set_openai_api_key(args.openai_key)
 
     if args.command == "model":
         if args.subcommand == "list":
             display(openai_wrapper.list_models(os.environ["OPENAI_API_KEY"], args.full))
         elif args.subcommand == "create":
             customize.create_model(
-                args.discord_token,
-                os.environ["OPENAI_API_KEY"],
                 args.channel,
                 args.user,
+                args.discord_token,
+                os.environ["OPENAI_API_KEY"],
                 thought_time=args.thought_time,
                 thought_max=args.thought_max,
                 thought_min=args.thought_min,
@@ -86,9 +81,6 @@ def discordai_modelizer():
         elif args.subcommand == "cancel":
             display(
                 openai_wrapper.cancel_job(args.job_id, os.environ["OPENAI_API_KEY"])
-            )
-            display(
-                openai_wrapper.delete_model(args.model_id, os.environ["OPENAI_API_KEY"])
             )
         else:
             raise argparse.ArgumentError(

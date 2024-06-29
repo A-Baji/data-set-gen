@@ -81,7 +81,7 @@ def parse_logs(
         thought = build_thought("", messages[0])
         for i, msg in enumerate(messages[1::]):
             if msg["content"]:
-                prev_timestamp = parser.parse(messages[i - 1]["timestamp"])
+                prev_timestamp = parser.parse(messages[i]["timestamp"])
                 curr_timestamp = parser.parse(msg["timestamp"])
                 differentiation = (curr_timestamp - prev_timestamp) / timedelta(
                     milliseconds=1
@@ -107,8 +107,6 @@ def get_lines(
     f.close()
 
     num_lines = len(lines)
-    if N > num_lines:
-        return
 
     if select_mode == "sequential":
         step = 1
@@ -118,7 +116,7 @@ def get_lines(
     if reverse:
         lines = lines[::-1]
 
-    selected_lines = lines[offset:][::step][:N]
+    selected_lines = lines[offset:][:: step or 1][:N]
 
     with open(file_name, "w") as f:
         f.writelines(selected_lines)
