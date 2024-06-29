@@ -12,7 +12,7 @@ def discordai_modelizer():
         prog="discordai_modelizer", description="DiscordAI Modelizer CLI"
     )
     parser.add_argument(
-        "-V", "--version", action="version", version=f"discordai {version}"
+        "-V", "--version", action="version", version=f"discordai-modelizer {version}"
     )
     command = parser.add_subparsers(dest="command")
 
