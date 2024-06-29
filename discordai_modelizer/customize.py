@@ -15,6 +15,15 @@ MODEL_MAP = {
 }
 
 
+def set_bot_token(token):
+    if token:
+        os.environ["DISCORD_BOT_TOKEN"] = token
+    elif "DISCORD_BOT_TOKEN" not in os.environ:
+        raise ValueError(
+            "Your Discord bot token must either be passed in as an argument or set as an environment variable",
+        )
+
+
 def create_model(
     channel_id: str,
     user_id: str,
@@ -45,13 +54,7 @@ def create_model(
 
     # Download logs
     if (not os.path.isfile(full_logs_path) or redownload) and not use_existing:
-        try:
-            bot_token = bot_token or os.environ["DISCORD_BOT_TOKEN"]
-        except KeyError:
-            raise ArgumentError(
-                None,
-                "Your Discord bot token must either be passed in as an argument or set as an environment variable",
-            )
+        set_bot_token(bot_token)
 
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print(
@@ -73,7 +76,7 @@ def create_model(
                 "-c",
                 channel_id,
                 "-t",
-                bot_token,
+                os.environ["DISCORD_BOT_TOKEN"],
                 "-o",
                 f"{channel_id}_logs.json",
                 "-f",
