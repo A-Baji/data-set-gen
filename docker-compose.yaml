@@ -1,4 +1,4 @@
-# VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose up --build
+# PY_VER=3.12 VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose up --build
 # docker exec -it discordai-modelizer-app-1 bash
 # discordai_modelizer model list --full
 # discordai_modelizer model create -c $CHANNEL_ID -u "$USERNAME"
@@ -8,8 +8,12 @@
 # discordai_modelizer job cancel -j ftjob-SDOuDLTs6a7xu9LMzdhJKo9w
 services:
   app:
-    build: .
-    image: discord-ai/discordai_modelizer:${VERSION}
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - PY_VER
+    image: discord-ai/discordai_modelizer:py${PY_VER}-v${VERSION}
     privileged: true
     network_mode: host
     working_dir: /main
@@ -21,7 +25,7 @@ services:
       - PYTHONUNBUFFERED=1
     env_file: ./.env
     volumes:
-      - ./discordai_modelizer:/usr/local/lib/python3.12/site-packages/discordai_modelizer
+      - ./discordai_modelizer:/usr/local/lib/python${PY_VER}/site-packages/discordai_modelizer
       - ./files/:/root/.local/share/discordai/
     command:
       - sh
