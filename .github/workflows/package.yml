@@ -34,7 +34,7 @@ jobs:
         PYTHONUNBUFFERED: 1
       run: |
         export VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+')
-        docker compose -f docker-compose-test.yaml --env-file test.env up --build
+        docker compose -f docker-compose-test.yaml up --build
   release:
     if: |
       github.event_name == 'push' &&
