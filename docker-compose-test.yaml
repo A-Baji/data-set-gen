@@ -1,4 +1,4 @@
-# PY_VER=3.12 VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose -f docker-compose-test.yaml --env-file test.env up --build
+# PY_VER=3.12 VERSION=$(cat discordai_modelizer/version.py | grep -oP '\d+\.\d+\.\d+') docker compose -f docker-compose-test.yaml --env-file .env.test up --build
 # docker exec -it discordai-modelizer-tests-1 bash
 services:
   tests:
@@ -17,7 +17,7 @@ services:
       - CHANNEL_ID
       - USERNAME
       - PYTHONUNBUFFERED=1
-    env_file: test.env
+    env_file: .env.test
     volumes:
       - ./discordai_modelizer:/usr/local/lib/python${PY_VER}/site-packages/discordai_modelizer
       - ./tests:/main/tests
