@@ -1253,6 +1253,10 @@ job_cancel_expected = {
     "result": "Canceled fine-tuning job: ftjob-i2IyeV2xbLCSrYq45kTKSdwE"
 }
 
+delete_model_expected = {
+    "error": "You have insufficient permissions for this operation. Missing scopes: api.delete"
+}
+
 channel_logs_expected = {
     "guild": {
         "id": "194921511130365952",
