@@ -111,7 +111,7 @@ def discordai_modelizer():
     if hasattr(args, "openai_key"):
         args.openai_key = set_openai_api_key(args.openai_key)
     if hasattr(args, "discord_token"):
-        set_bot_token(args.discord_token)
+        args.discord_token = set_bot_token(args.discord_token)
 
     read_modelizer_args(args, model_subcommand, job_subcommand)
 
