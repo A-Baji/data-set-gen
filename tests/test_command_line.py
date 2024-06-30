@@ -119,4 +119,6 @@ def test_cli_job_bad_args(script_runner):
         ]
     )
     assert not cli.success
-    assert "Must choose a command from `info`, `events`, or `cancel`" in cli.stderr
+    assert (
+        "Must choose a command from `list`, `info`, `events`, or `cancel`" in cli.stderr
+    )
