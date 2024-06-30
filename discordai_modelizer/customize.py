@@ -5,9 +5,7 @@ import shutil
 import pathlib
 
 from openai import OpenAI
-from argparse import ArgumentError
 from discordai_modelizer.gen_dataset import parse_logs, get_lines
-from discordai_modelizer.openai import set_openai_api_key
 
 MODEL_MAP = {
     "davinci": "davinci-002",
@@ -15,20 +13,11 @@ MODEL_MAP = {
 }
 
 
-def set_bot_token(token):
-    if token:
-        os.environ["DISCORD_BOT_TOKEN"] = token
-    elif "DISCORD_BOT_TOKEN" not in os.environ:
-        raise ValueError(
-            "Your Discord bot token must either be passed in as an argument or set as an environment variable",
-        )
-
-
 def create_model(
     channel_id: str,
     user_id: str,
-    bot_token: str = None,
-    openai_key: str = None,
+    bot_token: str = os.getenv("DISCORD_BOT_TOKEN"),
+    openai_key: str = os.getenv("OPENAI_API_KEY"),
     thought_time=10,
     thought_max: int = None,
     thought_min=4,
@@ -41,8 +30,7 @@ def create_model(
     redownload=False,
     use_existing=False,
 ):
-    set_openai_api_key(openai_key)
-    client = OpenAI()
+    client = OpenAI(api_key=openai_key)
     channel_user = f"{channel_id[:4]}_{user_id}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
     full_logs_path = files_path / f"{channel_id}_logs.json"
@@ -54,8 +42,6 @@ def create_model(
 
     # Download logs
     if (not os.path.isfile(full_logs_path) or redownload) and not use_existing:
-        set_bot_token(bot_token)
-
         print("INFO: Exporting chat logs using DiscordChatExporter...")
         print(
             "INFO: This may take a few minutes to hours depending on the message count of the channel"
@@ -76,7 +62,7 @@ def create_model(
                 "-c",
                 channel_id,
                 "-t",
-                os.environ["DISCORD_BOT_TOKEN"],
+                bot_token or "",
                 "-o",
                 f"{channel_id}_logs.json",
                 "-f",
