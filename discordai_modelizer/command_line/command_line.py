@@ -5,9 +5,13 @@ from discordai_modelizer import __version__ as version
 from discordai_modelizer import customize
 from discordai_modelizer import openai as openai_wrapper
 from discordai_modelizer.command_line import subparsers
+from discordai_modelizer.command_line.subparsers import (
+    set_openai_help_str,
+    set_bot_key_help_str,
+)
 
 
-def setup_modelizer_commands(parser):
+def setup_modelizer_commands(parser, is_parent=False):
     command = parser.add_subparsers(dest="command")
 
     model = command.add_parser(
@@ -18,14 +22,14 @@ def setup_modelizer_commands(parser):
     model_subcommand = model.add_subparsers(dest="subcommand")
     job_subcommand = job.add_subparsers(dest="subcommand")
 
-    subparsers.setup_model_list(model_subcommand)
-    subparsers.setup_model_create(model_subcommand)
-    subparsers.setup_model_delete(model_subcommand)
+    subparsers.setup_model_list(model_subcommand, is_parent)
+    subparsers.setup_model_create(model_subcommand, is_parent)
+    subparsers.setup_model_delete(model_subcommand, is_parent)
 
-    subparsers.setup_job_list(job_subcommand)
-    subparsers.setup_job_info(job_subcommand)
-    subparsers.setup_job_events(job_subcommand)
-    subparsers.setup_job_cancel(job_subcommand)
+    subparsers.setup_job_list(job_subcommand, is_parent)
+    subparsers.setup_job_info(job_subcommand, is_parent)
+    subparsers.setup_job_events(job_subcommand, is_parent)
+    subparsers.setup_job_cancel(job_subcommand, is_parent)
 
     return command, model_subcommand, job_subcommand
 
@@ -82,7 +86,7 @@ def display(obj):
 def set_openai_api_key(key: str):
     if not key and not os.getenv("OPENAI_API_KEY"):
         raise ValueError(
-            "Your OpenAI API key must either be passed in as an argument or set as an environment variable",
+            f"Your OpenAI API key must either be passed in as an argument or set {set_openai_help_str()}",
         )
     else:
         return key or os.getenv("OPENAI_API_KEY")
@@ -91,7 +95,7 @@ def set_openai_api_key(key: str):
 def set_bot_token(token: str):
     if not token and not os.getenv("DISCORD_BOT_TOKEN"):
         raise ValueError(
-            "Your Discord bot token must either be passed in as an argument or set as an environment variable",
+            f"Your Discord bot token must either be passed in as an argument or set {set_bot_key_help_str()}",
         )
     else:
         return token or os.getenv("DISCORD_BOT_TOKEN")
