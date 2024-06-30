@@ -1,6 +1,3 @@
-from argparse import _SubParsersAction, ArgumentParser
-
-
 def setup_model_list(model_subcommand):
     model_list = model_subcommand.add_parser(
         "list", description="List your openAi customized models"

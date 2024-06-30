@@ -5,15 +5,10 @@ from discordai_modelizer import __version__ as version
 from discordai_modelizer import customize
 from discordai_modelizer import openai as openai_wrapper
 from discordai_modelizer.command_line import subparsers
+from discordai_modelizer.customize import set_bot_token
 
 
-def discordai_modelizer():
-    parser = argparse.ArgumentParser(
-        prog="discordai_modelizer", description="DiscordAI Modelizer CLI"
-    )
-    parser.add_argument(
-        "-V", "--version", action="version", version=f"discordai-modelizer {version}"
-    )
+def setup_modelizer_commands(parser):
     command = parser.add_subparsers(dest="command")
 
     model = command.add_parser(
@@ -33,10 +28,10 @@ def discordai_modelizer():
     subparsers.setup_job_events(job_subcommand)
     subparsers.setup_job_cancel(job_subcommand)
 
-    args = parser.parse_args()
-    if hasattr(args, "openai_key"):
-        openai_wrapper.set_openai_api_key(args.openai_key)
+    return command, model_subcommand, job_subcommand
 
+
+def read_modelizer_args(args, model_subcommand, job_subcommand):
     if args.command == "model":
         if args.subcommand == "list":
             display(openai_wrapper.list_models(os.environ["OPENAI_API_KEY"], args.full))
@@ -85,12 +80,31 @@ def discordai_modelizer():
         else:
             raise argparse.ArgumentError(
                 job_subcommand,
-                "Must choose a command from `info`, `events`, or `cancel`",
+                "Must choose a command from `list`, `info`, `events`, or `cancel`",
             )
 
 
 def display(obj):
     print(json.dumps(obj, indent=4))
+
+
+def discordai_modelizer():
+    parser = argparse.ArgumentParser(
+        prog="discordai_modelizer", description="DiscordAI Modelizer CLI"
+    )
+    parser.add_argument(
+        "-V", "--version", action="version", version=f"discordai-modelizer {version}"
+    )
+
+    command, model_subcommand, job_subcommand = setup_modelizer_commands(parser)
+
+    args = parser.parse_args()
+    if hasattr(args, "openai_key"):
+        openai_wrapper.set_openai_api_key(args.openai_key)
+    if hasattr(args, "discord_token"):
+        set_bot_token(args.discord_token)
+
+    read_modelizer_args(args, model_subcommand, job_subcommand)
 
 
 if __name__ == "__main__":
