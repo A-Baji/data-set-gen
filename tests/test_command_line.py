@@ -22,7 +22,7 @@ def test_cli_model_list(script_runner):
     assert dumps(expected_values.list_module_expected, indent=4) in cli.stdout
 
 
-def test_cli_training(script_runner, default_file_output, set_bad_openai_key):
+def test_cli_training(script_runner, default_file_output):
     cli = script_runner.run(
         [
             "discordai_modelizer",
@@ -32,6 +32,8 @@ def test_cli_training(script_runner, default_file_output, set_bad_openai_key):
             f"{CHANNEL_ID}",
             "-u",
             f"{USER}",
+            "-o",
+            "BAD_KEY",
             "-b",
             "babbage",
         ]

@@ -56,9 +56,11 @@ def test_not_use_existing_dirty(capsys, default_file_output):
     assert f"INFO: Dataset saved to {FULL_DATASET_PATH}" in stdout.out
 
 
-def test_training(capsys, default_file_output, set_bad_openai_key):
+def test_training(capsys, default_file_output):
     with pytest.raises(AuthenticationError):
-        customize.create_model(CHANNEL_ID, USER, base_model="babbage")
+        customize.create_model(
+            CHANNEL_ID, USER, openai_key="BAD_KEY", base_model="babbage"
+        )
     stdout = capsys.readouterr()
     assert "INFO: Starting OpenAI fine-tune job..." in stdout.out
 

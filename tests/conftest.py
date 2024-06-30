@@ -33,11 +33,3 @@ def default_file_output():
         FULL_LOGS_PATH.unlink()
     if FULL_DATASET_PATH.exists():
         FULL_DATASET_PATH.unlink()
-
-
-@pytest.fixture(scope="function")
-def set_bad_openai_key():
-    key = os.getenv("OPENAI_API_KEY")
-    os.environ["OPENAI_API_KEY"] = "BAD_KEY"
-    yield
-    os.environ["OPENAI_API_KEY"] = key
