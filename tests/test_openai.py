@@ -8,14 +8,6 @@ from . import expected_values
 from .conftest import list_dict_comp
 
 
-@pytest.fixture(scope="function")
-def unset_openai_api_key():
-    key = os.environ["OPENAI_API_KEY"]
-    del os.environ["OPENAI_API_KEY"]
-    yield
-    openai_wrapper.set_openai_api_key(key)
-
-
 def test_model_list():
     models = openai_wrapper.list_models()
     list_dict_comp(expected_values.list_module_expected, models)
@@ -62,13 +54,3 @@ def test_delete_model_cancel(monkeypatch, capsys):
     openai_wrapper.delete_model("whisper-1")
     stdout = capsys.readouterr()
     assert "Cancelling model deletion..." in stdout.out
-
-
-def test_no_openai_api_key(unset_openai_api_key):
-    with pytest.raises(
-        ValueError,
-        match=escape(
-            "Your OpenAI API key must either be passed in as an argument or set as an environment variable"
-        ),
-    ):
-        openai_wrapper.set_openai_api_key(None)

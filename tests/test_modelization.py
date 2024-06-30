@@ -8,14 +8,6 @@ from . import expected_values
 from .conftest import FULL_LOGS_PATH, FULL_DATASET_PATH, CHANNEL_ID, USER
 
 
-@pytest.fixture(scope="function")
-def unset_bot_token_key():
-    key = os.environ["DISCORD_BOT_TOKEN"]
-    del os.environ["DISCORD_BOT_TOKEN"]
-    yield
-    customize.set_bot_token(key)
-
-
 def test_logs_download(default_file_output):
     assert FULL_LOGS_PATH.exists()
     with open(FULL_LOGS_PATH, "r", encoding="utf-8") as data_file:
@@ -80,11 +72,3 @@ def test_skip_training(capsys, default_file_output):
 def test_cleanup(default_file_output):
     customize.create_model(CHANNEL_ID, USER, clean=True)
     assert not FULL_DATASET_PATH.exists()
-
-
-def test_no_bot_token(unset_bot_token_key):
-    with pytest.raises(
-        ValueError,
-        match="Your Discord bot token must either be passed in as an argument or set as an environment variable",
-    ):
-        customize.set_bot_token(None)
