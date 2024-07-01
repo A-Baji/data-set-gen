@@ -83,22 +83,22 @@ def display(obj):
     print(json.dumps(obj, indent=4))
 
 
-def set_openai_api_key(key: str):
-    if not key and not os.getenv("OPENAI_API_KEY"):
+def set_openai_api_key(key: str, obj, is_parent=False):
+    if not key and not obj.get("OPENAI_API_KEY"):
         raise ValueError(
-            f"Your OpenAI API key must either be passed in as an argument or set {set_openai_help_str()}",
+            f"Your OpenAI API key must either be passed in as an argument or set {set_openai_help_str(is_parent)}",
         )
     else:
-        return key or os.getenv("OPENAI_API_KEY")
+        return key or obj.get("OPENAI_API_KEY")
 
 
-def set_bot_token(token: str):
-    if not token and not os.getenv("DISCORD_BOT_TOKEN"):
+def set_bot_token(token: str, obj, is_parent=False):
+    if not token and not obj.get("DISCORD_BOT_TOKEN"):
         raise ValueError(
-            f"Your Discord bot token must either be passed in as an argument or set {set_bot_key_help_str()}",
+            f"Your Discord bot token must either be passed in as an argument or set {set_bot_key_help_str(is_parent)}",
         )
     else:
-        return token or os.getenv("DISCORD_BOT_TOKEN")
+        return token or obj.get("DISCORD_BOT_TOKEN")
 
 
 def discordai_modelizer():
@@ -113,9 +113,9 @@ def discordai_modelizer():
 
     args = parser.parse_args()
     if hasattr(args, "openai_key"):
-        args.openai_key = set_openai_api_key(args.openai_key)
+        args.openai_key = set_openai_api_key(args.openai_key, os.environ)
     if hasattr(args, "discord_token"):
-        args.discord_token = set_bot_token(args.discord_token)
+        args.discord_token = set_bot_token(args.discord_token, os.environ)
 
     read_modelizer_args(args, model_subcommand, job_subcommand)
 
