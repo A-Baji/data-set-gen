@@ -4,8 +4,6 @@ import appdirs
 import pytest
 
 from discordai_modelizer import customize
-from discordai_modelizer.openai import set_openai_api_key
-
 
 CHANNEL_ID = os.environ["CHANNEL_ID"]
 USER = os.environ["USERNAME"]
@@ -35,11 +33,3 @@ def default_file_output():
         FULL_LOGS_PATH.unlink()
     if FULL_DATASET_PATH.exists():
         FULL_DATASET_PATH.unlink()
-
-
-@pytest.fixture(scope="function")
-def set_bad_openai_key():
-    key = os.environ["OPENAI_API_KEY"]
-    set_openai_api_key("BAD_KEY")
-    yield
-    set_openai_api_key(key)

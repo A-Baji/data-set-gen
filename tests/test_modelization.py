@@ -8,14 +8,6 @@ from . import expected_values
 from .conftest import FULL_LOGS_PATH, FULL_DATASET_PATH, CHANNEL_ID, USER
 
 
-@pytest.fixture(scope="function")
-def unset_bot_token_key():
-    key = os.environ["DISCORD_BOT_TOKEN"]
-    del os.environ["DISCORD_BOT_TOKEN"]
-    yield
-    customize.set_bot_token(key)
-
-
 def test_logs_download(default_file_output):
     assert FULL_LOGS_PATH.exists()
     with open(FULL_LOGS_PATH, "r", encoding="utf-8") as data_file:
@@ -64,9 +56,11 @@ def test_not_use_existing_dirty(capsys, default_file_output):
     assert f"INFO: Dataset saved to {FULL_DATASET_PATH}" in stdout.out
 
 
-def test_training(capsys, default_file_output, set_bad_openai_key):
+def test_training(capsys, default_file_output):
     with pytest.raises(AuthenticationError):
-        customize.create_model(CHANNEL_ID, USER, base_model="babbage")
+        customize.create_model(
+            CHANNEL_ID, USER, openai_key="BAD_KEY", base_model="babbage"
+        )
     stdout = capsys.readouterr()
     assert "INFO: Starting OpenAI fine-tune job..." in stdout.out
 
@@ -80,11 +74,3 @@ def test_skip_training(capsys, default_file_output):
 def test_cleanup(default_file_output):
     customize.create_model(CHANNEL_ID, USER, clean=True)
     assert not FULL_DATASET_PATH.exists()
-
-
-def test_no_bot_token(unset_bot_token_key):
-    with pytest.raises(
-        ValueError,
-        match="Your Discord bot token must either be passed in as an argument or set as an environment variable",
-    ):
-        customize.set_bot_token(None)
