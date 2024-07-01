@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [3.0.4] - 07-1-2024
+
+### Removed
+
+- deleted unnecessary DiscordChatExporter files
+
 ## [3.0.3] - 07-1-2024
 
 ### Changed
@@ -103,6 +109,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - switched to `pathlib` for file path parsing
 
+[3.0.4]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.0...3.0.1
