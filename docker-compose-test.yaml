@@ -24,5 +24,5 @@ services:
       - -c
       - |
         pip install pytest pytest-cov pytest-console-scripts --root-user-action ignore
-        # pytest --cov-report term-missing --cov=discordai_modelizer tests
-        tail -f /dev/null
+        pytest --cov-report term-missing --cov=discordai_modelizer tests
+        # tail -f /dev/null
