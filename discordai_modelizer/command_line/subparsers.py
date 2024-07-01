@@ -8,7 +8,7 @@ def set_bot_key_help_str(is_parent=False):
 
 def setup_model_list(model_subcommand, is_parent=False):
     model_list = model_subcommand.add_parser(
-        "list", description="List your openAi customized models"
+        "list", help="List your openAi customized models"
     )
     model_list_required_named = model_list.add_argument_group(
         "required named arguments"
@@ -36,7 +36,7 @@ def setup_model_list(model_subcommand, is_parent=False):
 def setup_model_create(model_subcommand, is_parent=False):
     model_create = model_subcommand.add_parser(
         "create",
-        description="Create a new openAI customized model by downloading the specified chat logs, parsing them into a usable dataset, and then training a customized model using openai",
+        help="Create a new openAI customized model by downloading the specified chat logs, parsing them into a usable dataset, and then training a customized model using openai",
     )
     model_create_required_named = model_create.add_argument_group(
         "required named arguments"
@@ -172,7 +172,7 @@ def setup_model_create(model_subcommand, is_parent=False):
 def setup_model_delete(model_subcommand, is_parent=False):
     model_delete = model_subcommand.add_parser(
         "delete",
-        description="Delete an openAI customized model",
+        help="Delete an openAI customized model",
     )
     model_delete_required_named = model_delete.add_argument_group(
         "required named arguments"
@@ -197,7 +197,7 @@ def setup_model_delete(model_subcommand, is_parent=False):
 
 def setup_job_list(job_subcommand, is_parent=False):
     job_list = job_subcommand.add_parser(
-        "list", description="List your openAI customization jobs"
+        "list", help="List your openAI customization jobs"
     )
     job_list_required_named = job_list.add_argument_group("required named arguments")
     job_list_optional_named = job_list.add_argument_group("optional named arguments")
@@ -220,7 +220,7 @@ def setup_job_list(job_subcommand, is_parent=False):
 
 def setup_job_info(job_subcommand, is_parent=False):
     job_info = job_subcommand.add_parser(
-        "info", description="Get an openAI customization job's info"
+        "info", help="Get an openAI customization job's info"
     )
     job_info_required_named = job_info.add_argument_group("required named arguments")
 
@@ -243,7 +243,7 @@ def setup_job_info(job_subcommand, is_parent=False):
 
 def setup_job_events(job_subcommand, is_parent=False):
     job_events = job_subcommand.add_parser(
-        "events", description="Get an openAI customization job's events"
+        "events", help="Get an openAI customization job's events"
     )
     job_events_required_named = job_events.add_argument_group(
         "required named arguments"
@@ -268,7 +268,7 @@ def setup_job_events(job_subcommand, is_parent=False):
 
 def setup_job_cancel(job_subcommand, is_parent=False):
     job_cancel = job_subcommand.add_parser(
-        "cancel", description="Cancel an openAI customization job"
+        "cancel", help="Cancel an openAI customization job"
     )
     job_cancel_required_named = job_cancel.add_argument_group(
         "required named arguments"

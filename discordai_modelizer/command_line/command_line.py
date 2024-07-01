@@ -14,10 +14,8 @@ from discordai_modelizer.command_line.subparsers import (
 def setup_modelizer_commands(parser, is_parent=False):
     command = parser.add_subparsers(dest="command")
 
-    model = command.add_parser(
-        "model", description="Commands related to your openAI models"
-    )
-    job = command.add_parser("job", description="Commands related to your openAI jobs")
+    model = command.add_parser("model", help="Manage your OpenAI models")
+    job = command.add_parser("job", help="Manage your OpenAI jobs")
 
     model_subcommand = model.add_subparsers(dest="subcommand")
     job_subcommand = job.add_subparsers(dest="subcommand")
