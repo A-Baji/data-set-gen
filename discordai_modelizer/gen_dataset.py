@@ -9,6 +9,10 @@ from better_profanity import profanity
 import pathlib
 
 
+class UserNotFoundError(Exception):
+    pass
+
+
 def parse_logs(
     file: str,
     channel: str,
@@ -78,6 +82,10 @@ def parse_logs(
             if msg["author"].get("name") == username
             and (user_id is None or msg["author"].get("discriminator") == user_id)
         ]
+        if not messages:
+            raise UserNotFoundError(
+                f"No messages found in chat logs for user: {username}"
+            )
         thought = build_thought("", messages[0])
         for i, msg in enumerate(messages[1::]):
             if msg["content"]:

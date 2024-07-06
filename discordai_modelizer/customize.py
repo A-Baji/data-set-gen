@@ -5,7 +5,7 @@ import shutil
 import pathlib
 
 from openai import OpenAI
-from discordai_modelizer.gen_dataset import parse_logs, get_lines
+from discordai_modelizer.gen_dataset import parse_logs, get_lines, UserNotFoundError
 
 MODEL_MAP = {
     "davinci": "davinci-002",
@@ -87,14 +87,18 @@ def create_model(
         print("INFO: Using existing dataset... Skipping download and parsing.")
     else:
         print("INFO: Parsing chat logs into an openAI compatible dataset...")
-        parse_logs(
-            full_logs_path,
-            channel_id,
-            user_id,
-            thought_time,
-            thought_max,
-            thought_min,
-        )
+        try:
+            parse_logs(
+                full_logs_path,
+                channel_id,
+                user_id,
+                thought_time,
+                thought_max,
+                thought_min,
+            )
+        except UserNotFoundError as e:
+            print(f"ERROR: {e}")
+            return
         get_lines(full_dataset_path, max_entry_count, offset, select_mode, reverse)
         if not clean:
             print(f"INFO: Dataset saved to {full_dataset_path}")
