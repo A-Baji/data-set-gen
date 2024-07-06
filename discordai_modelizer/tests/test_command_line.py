@@ -25,10 +25,11 @@ def test_cli_model_list(script_runner, command):
     assert dumps(expected_values.list_module_expected, indent=4) in cli.stdout
 
 
-def test_cli_training(script_runner, default_file_output):
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_cli_training(script_runner, command, default_file_output):
     cli = script_runner.run(
         [
-            "discordai_modelizer",
+            command,
             "model",
             "create",
             "-c",
@@ -45,70 +46,77 @@ def test_cli_training(script_runner, default_file_output):
     assert "INFO: Starting OpenAI fine-tune job..." in cli.stdout
 
 
-def test_cli_model_list_full(script_runner):
-    cli = script_runner.run(["discordai_modelizer", "model", "list", "--full"])
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_cli_model_list_full(script_runner, command):
+    cli = script_runner.run([command, "model", "list", "--full"])
     assert cli.success
     assert dumps(expected_values.list_module_expected_full, indent=4) in cli.stdout
 
 
-def test_cli_delete_model(script_runner):
-    cli = script_runner.run(
-        ["discordai_modelizer", "model", "delete", "-m", "whisper-1"]
-    )
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_cli_delete_model(script_runner, command):
+    cli = script_runner.run([command, "model", "delete", "-m", "whisper-1"])
     assert (
         "Are you sure you want to delete this model? This action is not reversable. Y/N: "
         in cli.stdout
     )
 
 
-def test_cli_job_list(script_runner):
-    cli = script_runner.run(["discordai_modelizer", "job", "list"])
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_cli_job_list(script_runner, command):
+    cli = script_runner.run([command, "job", "list"])
     assert cli.success
     assert dumps(expected_values.list_job_expected, indent=4) in cli.stdout
 
 
-def test_job_list_full(script_runner):
-    cli = script_runner.run(["discordai_modelizer", "job", "list", "--full"])
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_job_list_full(script_runner, command):
+    cli = script_runner.run([command, "job", "list", "--full"])
     assert cli.success
     assert dumps(expected_values.list_job_expected_full, indent=4) in cli.stdout
 
 
-def test_job_info(script_runner):
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_job_info(script_runner, command):
     cli = script_runner.run(
-        ["discordai_modelizer", "job", "info", "-j", "ftjob-i2IyeV2xbLCSrYq45kTKSdwE"]
+        [command, "job", "info", "-j", "ftjob-i2IyeV2xbLCSrYq45kTKSdwE"]
     )
     assert cli.success
     assert dumps(expected_values.job_info_expected, indent=4) in cli.stdout
 
 
-def test_job_events(script_runner):
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_job_events(script_runner, command):
     cli = script_runner.run(
-        ["discordai_modelizer", "job", "events", "-j", "ftjob-i2IyeV2xbLCSrYq45kTKSdwE"]
+        [command, "job", "events", "-j", "ftjob-i2IyeV2xbLCSrYq45kTKSdwE"]
     )
     assert cli.success
     assert dumps(expected_values.job_events_expected, indent=4) in cli.stdout
 
 
-def test_job_cancel(script_runner):
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_job_cancel(script_runner, command):
     cli = script_runner.run(
-        ["discordai_modelizer", "job", "cancel", "-j", "ftjob-i2IyeV2xbLCSrYq45kTKSdwE"]
+        [command, "job", "cancel", "-j", "ftjob-i2IyeV2xbLCSrYq45kTKSdwE"]
     )
     assert cli.success
     assert dumps(expected_values.job_cancel_expected, indent=4) in cli.stdout
 
 
-def test_job_cancel(script_runner):
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_job_cancel(script_runner, command):
     cli = script_runner.run(
-        ["discordai_modelizer", "job", "cancel", "-j", "ftjob-i2IyeV2xbLCSrYq45kTKSdwE"]
+        [command, "job", "cancel", "-j", "ftjob-i2IyeV2xbLCSrYq45kTKSdwE"]
     )
     assert cli.success
     assert dumps(expected_values.job_cancel_expected, indent=4) in cli.stdout
 
 
-def test_cli_model_bad_args(script_runner):
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_cli_model_bad_args(script_runner, command):
     cli = script_runner.run(
         [
-            "discordai_modelizer",
+            command,
             "model",
         ]
     )
@@ -116,10 +124,11 @@ def test_cli_model_bad_args(script_runner):
     assert "Must choose a command from `list`, `create`, or `delete`" in cli.stderr
 
 
-def test_cli_job_bad_args(script_runner):
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_cli_job_bad_args(script_runner, command):
     cli = script_runner.run(
         [
-            "discordai_modelizer",
+            command,
             "job",
         ]
     )

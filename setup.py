@@ -25,7 +25,7 @@ setuptools.setup(
     long_description=pathlib.Path("README.md").read_text(),
     long_description_content_type="text/markdown",
     url="https://github.com/A-Baji/discordAI-modelizer",
-    packages=setuptools.find_packages(exclude=["tests*"]),
+    packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",

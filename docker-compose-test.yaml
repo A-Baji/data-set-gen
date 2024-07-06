@@ -18,7 +18,7 @@ services:
     env_file: .env.test
     volumes:
       - ./discordai_modelizer:/usr/local/lib/python${PY_VER}/site-packages/discordai_modelizer
-      - ./tests:/main/tests
+      - ./discordai_modelizer/tests:/main/tests
     command:
       - sh
       - -c
