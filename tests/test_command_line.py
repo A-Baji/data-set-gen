@@ -1,4 +1,6 @@
 from json import dumps
+
+from pytest import mark
 from . import expected_values
 from .conftest import CHANNEL_ID, USER
 
@@ -16,8 +18,9 @@ def test_cli_help(script_runner):
     assert "-V, --version  show program's version number and exit" in cli.stdout
 
 
-def test_cli_model_list(script_runner):
-    cli = script_runner.run(["discordai_modelizer", "model", "list"])
+@mark.parametrize("command", ["discordai_modelizer"])
+def test_cli_model_list(script_runner, command):
+    cli = script_runner.run([command, "model", "list"])
     assert cli.success
     assert dumps(expected_values.list_module_expected, indent=4) in cli.stdout
 

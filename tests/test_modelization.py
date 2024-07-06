@@ -1,7 +1,5 @@
-import os
 from openai import AuthenticationError
-import pytest
-
+from pytest import raises
 from json import load
 from discordai_modelizer import customize
 from . import expected_values
@@ -57,7 +55,7 @@ def test_not_use_existing_dirty(capsys, default_file_output):
 
 
 def test_training(capsys, default_file_output):
-    with pytest.raises(AuthenticationError):
+    with raises(AuthenticationError):
         customize.create_model(
             CHANNEL_ID, USER, openai_key="BAD_KEY", base_model="babbage"
         )
