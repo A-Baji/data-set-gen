@@ -55,7 +55,9 @@ def read_modelizer_args(args, model_subcommand, job_subcommand):
                 use_existing=args.use_existing,
             )
         elif args.subcommand == "delete":
-            display(openai_wrapper.delete_model(args.model_id, args.openai_key))
+            display(
+                openai_wrapper.delete_model(args.model_id, args.openai_key, args.force)
+            )
         else:
             raise argparse.ArgumentError(
                 model_subcommand,

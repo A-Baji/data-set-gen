@@ -1,7 +1,3 @@
-import os
-import pytest
-
-from re import escape
 from io import StringIO
 from discordai_modelizer import openai as openai_wrapper
 from . import expected_values
@@ -10,12 +6,14 @@ from .conftest import list_dict_comp
 
 def test_model_list():
     models = openai_wrapper.list_models()
-    list_dict_comp(expected_values.list_module_expected, models)
+    for o in expected_values.list_module_expected:
+        assert o in models
 
 
 def test_model_list_full():
     models = openai_wrapper.list_models(full=True)
-    list_dict_comp(expected_values.list_module_expected_full, models)
+    for o in expected_values.list_module_expected_full:
+        assert o in models
 
 
 def test_job_list():
@@ -43,9 +41,8 @@ def test_job_cancel():
     assert expected_values.job_cancel_expected == cancel
 
 
-def test_delete_model(monkeypatch):
-    monkeypatch.setattr("sys.stdin", StringIO("Y\n"))
-    delete = openai_wrapper.delete_model("whisper-1")
+def test_delete_model():
+    delete = openai_wrapper.delete_model("whisper-1", force=True)
     assert expected_values.delete_model_expected == delete
 
 

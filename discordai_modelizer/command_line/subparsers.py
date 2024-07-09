@@ -177,6 +177,9 @@ def setup_model_delete(model_subcommand, is_parent=False):
     model_delete_required_named = model_delete.add_argument_group(
         "required named arguments"
     )
+    model_delete_optional_named = model_delete.add_argument_group(
+        "optional named arguments"
+    )
 
     model_delete_required_named.add_argument(
         "-o",
@@ -192,6 +195,14 @@ def setup_model_delete(model_subcommand, is_parent=False):
         type=str,
         dest="model_id",
         help="Target model id",
+    )
+
+    model_delete_optional_named.add_argument(
+        "--force",
+        action="store_true",
+        required=False,
+        dest="force",
+        help="Skips the deletion confirmation dialogue",
     )
 
 

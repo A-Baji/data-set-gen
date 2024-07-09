@@ -98,10 +98,14 @@ def cancel_job(job_id: str, openai_key: str = os.getenv("OPENAI_API_KEY")) -> di
 
 
 def delete_model(
-    model_name: str, openai_key: str = os.getenv("OPENAI_API_KEY")
+    model_name: str, openai_key: str = os.getenv("OPENAI_API_KEY"), force=False
 ) -> dict:
-    confirm = input(
-        "Are you sure you want to delete this model? This action is not reversable. Y/N: "
+    confirm = (
+        "yes"
+        if force
+        else input(
+            "Are you sure you want to delete this model? This action is not reversable. Y/N: "
+        )
     )
     if confirm.lower() not in ["y", "yes"]:
         print("Cancelling model deletion...")
