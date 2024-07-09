@@ -1,6 +1,15 @@
 from json import dumps, loads
+import os
 
-from pytest import mark
+from pytest import mark, raises
+from discordai_modelizer.command_line.command_line import (
+    set_openai_api_key,
+    set_bot_token,
+)
+from discordai_modelizer.command_line.subparsers import (
+    set_openai_help_str,
+    set_bot_key_help_str,
+)
 from . import expected_values
 from .conftest import CHANNEL_ID, USER
 
@@ -138,3 +147,19 @@ def test_cli_job_bad_args(script_runner, command):
     assert (
         "Must choose a command from `list`, `info`, `events`, or `cancel`" in cli.stderr
     )
+
+
+def test_bad_set_openai_api_key(unset_envs):
+    with raises(
+        ValueError,
+        match=f"Your OpenAI API key must either be passed in as an argument or set {set_openai_help_str(False)}",
+    ):
+        set_openai_api_key(None, os.environ)
+
+
+def test_bad_set_bot_token(unset_envs):
+    with raises(
+        ValueError,
+        match=f"Your Discord bot token must either be passed in as an argument or set {set_bot_key_help_str(False)}",
+    ):
+        set_bot_token(None, os.environ)

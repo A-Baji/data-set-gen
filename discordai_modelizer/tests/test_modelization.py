@@ -72,3 +72,10 @@ def test_skip_training(capsys, default_file_output):
 def test_cleanup(default_file_output):
     customize.create_model(CHANNEL_ID, USER, clean=True)
     assert not FULL_DATASET_PATH.exists()
+
+
+def test_parse_logs_user_not_found(capsys, default_file_output):
+    username = "bad_username"
+    customize.create_model(CHANNEL_ID, username)
+    stdout = capsys.readouterr()
+    assert f"No messages found in chat logs for user: {username}" in stdout.out

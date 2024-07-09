@@ -1,9 +1,9 @@
 import os
 import pathlib
 import appdirs
-import pytest
 
 from discordai_modelizer import customize
+from pytest import fixture
 
 CHANNEL_ID = os.environ["CHANNEL_ID"]
 USER = os.environ["USERNAME"]
@@ -18,7 +18,7 @@ def list_dict_comp(x, y):
         assert d1 == d2
 
 
-@pytest.fixture(scope="session")
+@fixture(scope="session")
 def default_file_output():
     # Ensure a clean start by removing any existing files
     if FULL_LOGS_PATH.exists():
@@ -33,3 +33,14 @@ def default_file_output():
         FULL_LOGS_PATH.unlink()
     if FULL_DATASET_PATH.exists():
         FULL_DATASET_PATH.unlink()
+
+
+@fixture(scope="function")
+def unset_envs():
+    DISCORD_BOT_TOKEN = os.environ["DISCORD_BOT_TOKEN"]
+    OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+    del os.environ["DISCORD_BOT_TOKEN"]
+    del os.environ["OPENAI_API_KEY"]
+    yield
+    os.environ["DISCORD_BOT_TOKEN"] = DISCORD_BOT_TOKEN
+    os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY

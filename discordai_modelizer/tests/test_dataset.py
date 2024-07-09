@@ -1,5 +1,6 @@
 from json import loads
 from discordai_modelizer import gen_dataset
+from pytest import raises
 from . import expected_values
 from .conftest import FULL_LOGS_PATH, FILES_PATH, USER, list_dict_comp
 
@@ -151,3 +152,12 @@ def test_gen_dataset_distributed(default_file_output):
             [loads(line) for line in data_file],
         )
         data_file.close()
+
+
+def test_parse_logs_user_not_found(default_file_output):
+    username = "bad_username"
+    with raises(
+        gen_dataset.UserNotFoundError,
+        match=f"No messages found in chat logs for user: {username}",
+    ):
+        gen_dataset.parse_logs(FULL_LOGS_PATH, CHANNEL_ID, username)
