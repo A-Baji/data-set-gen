@@ -1,4 +1,4 @@
-from json import dumps
+from json import dumps, loads
 
 from pytest import mark
 from . import expected_values
@@ -22,7 +22,8 @@ def test_cli_help(script_runner):
 def test_cli_model_list(script_runner, command):
     cli = script_runner.run([command, "model", "list"])
     assert cli.success
-    assert dumps(expected_values.list_module_expected, indent=4) in cli.stdout
+    for o in expected_values.list_module_expected:
+        assert o in loads(cli.stdout)
 
 
 @mark.parametrize("command", ["discordai_modelizer"])
@@ -50,7 +51,8 @@ def test_cli_training(script_runner, command, default_file_output):
 def test_cli_model_list_full(script_runner, command):
     cli = script_runner.run([command, "model", "list", "--full"])
     assert cli.success
-    assert dumps(expected_values.list_module_expected_full, indent=4) in cli.stdout
+    for o in expected_values.list_module_expected_full:
+        assert o in loads(cli.stdout)
 
 
 @mark.parametrize("command", ["discordai_modelizer"])

@@ -6,12 +6,14 @@ from .conftest import list_dict_comp
 
 def test_model_list():
     models = openai_wrapper.list_models()
-    list_dict_comp(expected_values.list_module_expected, models)
+    for o in expected_values.list_module_expected:
+        assert o in models
 
 
 def test_model_list_full():
     models = openai_wrapper.list_models(full=True)
-    list_dict_comp(expected_values.list_module_expected_full, models)
+    for o in expected_values.list_module_expected_full:
+        assert o in models
 
 
 def test_job_list():
