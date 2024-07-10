@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [3.0.6] - 07-10-2024
+
+### Changed
+
+- Moved tests back out of the package
+
 ## [3.0.5] - 07-9-2024
 
 ### Added
@@ -120,6 +126,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - switched to `pathlib` for file path parsing
 
+[3.0.6]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.5...3.0.6
 [3.0.5]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.2...3.0.3
