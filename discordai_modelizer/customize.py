@@ -31,7 +31,7 @@ def create_model(
     use_existing=False,
 ):
     client = OpenAI(api_key=openai_key)
-    channel_user = f"{channel_id[:4]}_{user_id}"
+    channel_user = f"{user_id}_{channel_id[:4]}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
     full_logs_path = files_path / f"{channel_id}_logs.json"
     full_dataset_path = files_path / f"{channel_user}_data_set.jsonl"
