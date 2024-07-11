@@ -74,7 +74,7 @@ def parse_logs(
         """
         if thought[-1] not in punctuation:
             thought += "."
-        return dumps({"prompt": f"{username} says:", "completion": thought}) + "\n"
+        return dumps({"prompt": f"{user[:13]} says:", "completion": thought}) + "\n"
 
     def add_to_dataset(thought: str):
         """
@@ -84,7 +84,7 @@ def parse_logs(
             dataset.write(build_json(cleanup_string(thought)))
 
     files_path = pathlib.Path(user_data_dir(appname="discordai"))
-    dataset = open(files_path / f"{user}_{channel[:4]}_data_set.jsonl", "w")
+    dataset = open(files_path / f"{user[:13]}_{channel[:4]}_data_set.jsonl", "w")
     thought_max = 999999 if not thought_max else thought_max
     if "#" in user:
         username, user_id = user.split("#")
