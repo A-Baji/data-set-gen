@@ -5,7 +5,7 @@ from . import expected_values
 from .conftest import FULL_LOGS_PATH, FILES_PATH, USER, list_dict_comp
 
 CHANNEL_ID = "TEST_CHANNEL"
-FULL_DATASET_PATH = FILES_PATH / f"{CHANNEL_ID[:4]}_{USER}_data_set.jsonl"
+FULL_DATASET_PATH = FILES_PATH / f"{USER[:13]}_{CHANNEL_ID[:4]}_data_set.jsonl"
 
 
 def test_parse_logs(default_file_output):

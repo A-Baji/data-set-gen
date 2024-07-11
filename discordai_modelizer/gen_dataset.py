@@ -117,7 +117,7 @@ def parse_logs(
                     thought = build_thought(thought, msg)
         add_to_dataset(thought)
     dataset.close()
-    if path.getsize(files_path / f"{channel[:4]}_{user}_data_set.jsonl") == 0:
+    if path.getsize(files_path / f"{user[:13]}_{channel[:4]}_data_set.jsonl") == 0:
         print(
             "WARNING: The resulting dataset is empty. Please double check your parameters."
         )
