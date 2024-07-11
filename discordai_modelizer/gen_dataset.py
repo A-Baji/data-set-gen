@@ -1,11 +1,10 @@
 from appdirs import user_data_dir
-from re import sub
 from json import load, dumps
 from datetime import timedelta
 from dateutil import parser
 from string import punctuation
 from os import path
-from better_profanity import profanity
+import re
 import pathlib
 
 
@@ -31,14 +30,31 @@ def parse_logs(
         if word_count >= thought_min and thought_max >= word_count:
             return True
 
-    def clean_message(msg: dict) -> dict:
+    def cleanup_string(msg: str) -> str:
         """
-        Remove URLs from a message and,
-            return the message
+        Remove URLs and slurs from a string and,
+            return the string
         """
-        msg["content"] = profanity.censor(
-            sub(r"\bhttps?://\S+|\bftp://\S+|\bfile://\S+", "", msg["content"])
-        )
+        hate_speech_words = ["nigg", "fag", "gay", "tard"]
+
+        def censor_hate(match):
+            word = match.group()
+            # Find all vowels and replace them along with the next two characters
+            censored_word = re.sub(
+                r"([aeiou]).{0,2}",
+                lambda m: "*" * len(m.group()),
+                word,
+                flags=re.IGNORECASE,
+            )
+            return censored_word
+
+        url_pattern = re.compile(r"\bhttps?://\S+|\bftp://\S+|\bfile://\S+")
+        msg = url_pattern.sub("", msg)
+
+        for word in hate_speech_words:
+            pattern = re.compile(rf"(\b{re.escape(word)}\w{{0,1}})", re.IGNORECASE)
+            msg = pattern.sub(censor_hate, msg)
+
         return msg
 
     def build_thought(thought: str, msg: dict) -> str:
@@ -65,10 +81,10 @@ def parse_logs(
         Validate a thought, create a dataset JSON entry, and then add it to the dataset
         """
         if validate_thought(thought):
-            dataset.write(build_json(thought))
+            dataset.write(build_json(cleanup_string(thought)))
 
     files_path = pathlib.Path(user_data_dir(appname="discordai"))
-    dataset = open(files_path / f"{channel[:4]}_{user}_data_set.jsonl", "w")
+    dataset = open(files_path / f"{user}_{channel[:4]}_data_set.jsonl", "w")
     thought_max = 999999 if not thought_max else thought_max
     if "#" in user:
         username, user_id = user.split("#")
@@ -77,7 +93,7 @@ def parse_logs(
     with open(file, "r", encoding="utf-8") as data_file:
         data = load(data_file)
         messages = [
-            clean_message(msg)
+            msg
             for msg in data["messages"]
             if msg["author"].get("name") == username
             and (user_id is None or msg["author"].get("discriminator") == user_id)
