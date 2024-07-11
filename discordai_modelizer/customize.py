@@ -31,7 +31,7 @@ def create_model(
     use_existing=False,
 ):
     client = OpenAI(api_key=openai_key)
-    channel_user = f"{channel_id[:4]}_{user_id}"
+    channel_user = f"{user_id[:13]}_{channel_id[:4]}"
     files_path = pathlib.Path(appdirs.user_data_dir(appname="discordai"))
     full_logs_path = files_path / f"{channel_id}_logs.json"
     full_dataset_path = files_path / f"{channel_user}_data_set.jsonl"
@@ -112,7 +112,7 @@ def create_model(
         fine_tune = client.fine_tuning.jobs.create(
             model=MODEL_MAP[base_model],
             training_file=upload_response.id,
-            suffix=channel_user[:18],
+            suffix=channel_user,
         )
         print(
             "INFO: This may take a few minutes to hours depending on the size of the dataset and the selected base model"

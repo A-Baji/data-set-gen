@@ -2,6 +2,13 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [3.0.7] - 07-11-2024
+
+### Changed
+
+- updated hate speech censoring
+- updated file model tagging
+
 ## [3.0.6] - 07-10-2024
 
 ### Changed
