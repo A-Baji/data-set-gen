@@ -102,7 +102,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 ### Changed
 
 - flag to use an existing dataset for model creation to allow manual revision
-- user input for model creation updated to work with new discord naming system
+- user input for model creation updated to work with new Discord naming system
 - tweaked readme
 
 ## [1.2.2] - 02-22-2023

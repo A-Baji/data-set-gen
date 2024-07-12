@@ -8,7 +8,7 @@ def set_bot_key_help_str(is_parent=False):
 
 def setup_model_list(model_subcommand, is_parent=False):
     model_list = model_subcommand.add_parser(
-        "list", help="List your openAi customized models"
+        "list", help="List your openAI customized models"
     )
     model_list_required_named = model_list.add_argument_group(
         "required named arguments"
@@ -50,7 +50,7 @@ def setup_model_create(model_subcommand, is_parent=False):
         "--discord-token",
         type=str,
         dest="discord_token",
-        help=f"The discord token for your bot. Must either be passed in as an argument or set {set_bot_key_help_str(is_parent)}",
+        help=f"The Discord token for your bot. Must either be passed in as an argument or set {set_bot_key_help_str(is_parent)}",
     )
     model_create_required_named.add_argument(
         "-o",
@@ -65,7 +65,7 @@ def setup_model_create(model_subcommand, is_parent=False):
         required=True,
         type=str,
         dest="channel",
-        help="The ID of the discord channel you want to use",
+        help="The ID of the Discord channel you want to use",
     )
     model_create_required_named.add_argument(
         "-u",
@@ -73,7 +73,7 @@ def setup_model_create(model_subcommand, is_parent=False):
         required=True,
         type=str,
         dest="user",
-        help="The unique username of the discord user you want to use",
+        help="The unique username of the Discord user you want to use",
     )
 
     model_create_optional_named.add_argument(
@@ -156,7 +156,7 @@ def setup_model_create(model_subcommand, is_parent=False):
         action="store_true",
         required=False,
         dest="redownload",
-        help="Redownload the discord chat logs",
+        help="Redownload the Discord chat logs",
     )
     model_create_optional_named.add_argument(
         "--use_existing",

@@ -1,5 +1,5 @@
 # DiscordAI Modelizer
-DiscordAI Modelizer is a python package that can generate custom openai models based on a discord user's chat history in a discord channel. It uses [DiscordChatExporter](https://github.com/Tyrrrz/DiscordChatExporter) to download the logs of a channel, processes the logs into a usable dataset, and then uses [openAI's API](https://beta.openai.com/docs/introduction) to create a customized model. It also wraps some of the tools from the openAI API to help with managing customizations.
+DiscordAI Modelizer is a python package that can generate custom openai models based on a Discord user's chat history in a Discord channel. It uses [DiscordChatExporter](https://github.com/Tyrrrz/DiscordChatExporter) to download the logs of a channel, processes the logs into a usable dataset, and then uses [openAI's API](https://beta.openai.com/docs/introduction) to create a customized model. It also wraps some of the tools from the openAI API to help with managing customizations.
 
 DiscordAI Modelizer is primarily used as a subcomponent of [DiscordAI](https://github.com/A-Baji/discordAI), but may also be used independently.
 
