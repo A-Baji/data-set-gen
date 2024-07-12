@@ -123,19 +123,17 @@ def parse_logs(
         )
 
 
-def get_lines(
-    file_name: str, N=1000, offset=0, select_mode="sequential", reverse=False
-):
+def get_lines(file_name: str, N=1000, offset=0, distributed=False, reverse=False):
     with open(file_name, "r") as f:
         lines = f.readlines()
     f.close()
 
     num_lines = len(lines)
 
-    if select_mode == "sequential":
-        step = 1
+    if distributed:
+        step = (num_lines - offset) // N
     else:
-        step = num_lines // N
+        step = 1
 
     if reverse:
         lines = lines[::-1]

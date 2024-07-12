@@ -47,7 +47,7 @@ def read_modelizer_args(args, model_subcommand, job_subcommand):
                 thought_min=args.thought_min,
                 max_entry_count=args.max_entries,
                 offset=args.offset,
-                select_mode=args.select_mode,
+                distributed=args.distributed,
                 reverse=args.reverse,
                 base_model=args.base_model,
                 clean=args.dirty,
