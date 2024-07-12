@@ -145,10 +145,51 @@ def test_gen_dataset_distributed(default_file_output):
     gen_dataset.parse_logs(
         FULL_LOGS_PATH, CHANNEL_ID, USER, thought_time=0, thought_min=1
     )
-    gen_dataset.get_lines(FULL_DATASET_PATH, N=5, select_mode="distributed")
+    gen_dataset.get_lines(FULL_DATASET_PATH, N=5, distributed=True)
     with open(FULL_DATASET_PATH, "r", encoding="utf-8") as data_file:
         list_dict_comp(
             expected_values.gen_dataset_max_5_distributed,
+            [loads(line) for line in data_file],
+        )
+        data_file.close()
+
+
+def test_gen_dataset_distributed_offset(default_file_output):
+    gen_dataset.parse_logs(
+        FULL_LOGS_PATH, CHANNEL_ID, USER, thought_time=0, thought_min=1
+    )
+    gen_dataset.get_lines(FULL_DATASET_PATH, N=5, distributed=True, offset=2)
+    with open(FULL_DATASET_PATH, "r", encoding="utf-8") as data_file:
+        list_dict_comp(
+            expected_values.gen_dataset_max_5_distributed_offset_2,
+            [loads(line) for line in data_file],
+        )
+        data_file.close()
+
+
+def test_gen_dataset_distributed_reverse(default_file_output):
+    gen_dataset.parse_logs(
+        FULL_LOGS_PATH, CHANNEL_ID, USER, thought_time=0, thought_min=1
+    )
+    gen_dataset.get_lines(FULL_DATASET_PATH, N=5, distributed=True, reverse=True)
+    with open(FULL_DATASET_PATH, "r", encoding="utf-8") as data_file:
+        list_dict_comp(
+            expected_values.gen_dataset_max_5_distributed_reverse,
+            [loads(line) for line in data_file],
+        )
+        data_file.close()
+
+
+def test_gen_dataset_distributed_reverse_offset(default_file_output):
+    gen_dataset.parse_logs(
+        FULL_LOGS_PATH, CHANNEL_ID, USER, thought_time=0, thought_min=1
+    )
+    gen_dataset.get_lines(
+        FULL_DATASET_PATH, N=5, distributed=True, reverse=True, offset=2
+    )
+    with open(FULL_DATASET_PATH, "r", encoding="utf-8") as data_file:
+        list_dict_comp(
+            expected_values.gen_dataset_max_5_distributed_reverse_offset_2,
             [loads(line) for line in data_file],
         )
         data_file.close()
