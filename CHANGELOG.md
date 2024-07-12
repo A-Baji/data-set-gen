@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [3.0.9] - 07-11-2024
+
+### Changed
+
+- consistently capitalize Discord and OpenAI across the project
+
 ## [3.0.8] - 07-11-2024
 
 ### Changed
@@ -140,6 +146,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - switched to `pathlib` for file path parsing
 
+[3.0.9]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.8...3.0.9
 [3.0.8]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.7...3.0.8
 [3.0.7]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.6...3.0.7
 [3.0.6]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.5...3.0.6
