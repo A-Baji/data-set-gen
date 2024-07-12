@@ -134,11 +134,11 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 ### Changed
 
-- replaced `subprocess` instances with appropriate openAI python API methods
+- replaced `subprocess` instances with appropriate OpenAI python API methods
 
 ### Removed
 
-- dataset clean up step with openAI fine tune API
+- dataset clean up step with OpenAI fine tune API
 
 ## [1.0.1] - 02-11-2023
 

@@ -86,7 +86,7 @@ def create_model(
     if use_existing:
         print("INFO: Using existing dataset... Skipping download and parsing.")
     else:
-        print("INFO: Parsing chat logs into an openAI compatible dataset...")
+        print("INFO: Parsing chat logs into an OpenAI compatible dataset...")
         try:
             parse_logs(
                 full_logs_path,
@@ -103,7 +103,7 @@ def create_model(
         if not clean:
             print(f"INFO: Dataset saved to {full_dataset_path}")
 
-    # Train customized openAI model
+    # Train customized OpenAI model
     if base_model in ["davinci", "babbage"]:
         print("INFO: Starting OpenAI fine-tune job...")
         upload_response = client.files.create(
