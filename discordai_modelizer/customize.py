@@ -23,7 +23,7 @@ def create_model(
     thought_min=4,
     max_entry_count=1000,
     offset=0,
-    select_mode="sequential",
+    distributed=False,
     base_model="none",
     reverse=False,
     clean=False,
@@ -99,7 +99,7 @@ def create_model(
         except UserNotFoundError as e:
             print(f"ERROR: {e}")
             return
-        get_lines(full_dataset_path, max_entry_count, offset, select_mode, reverse)
+        get_lines(full_dataset_path, max_entry_count, offset, distributed, reverse)
         if not clean:
             print(f"INFO: Dataset saved to {full_dataset_path}")
 

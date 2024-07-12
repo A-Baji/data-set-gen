@@ -131,13 +131,11 @@ def setup_model_create(model_subcommand, is_parent=False):
         help="The offset by line index starting at 0 for where to start selecting lines for the dataset: DEFAULT=0",
     )
     model_create_optional_named.add_argument(
-        "-s",
-        "--select-mode",
-        choices=["sequential", "distributed"],
-        default="sequential",
+        "--distributed",
+        action="store_true",
         required=False,
-        dest="select_mode",
-        help="The method to select lines for the dataset, where `sequential` mode will select lines in chronological order, while `distributed` mode will select an even distribution of lines: DEFAULT=sequential",
+        dest="distributed",
+        help="Select lines as an even distribution instead of sequentially",
     )
     model_create_optional_named.add_argument(
         "--reverse_lines",
