@@ -2,6 +2,13 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [3.0.8] - 07-11-2024
+
+### Changed
+
+- changed distributed selection mode to a flag: `--distributed`
+- fix a small bug for distributed mode with offsets  
+
 ## [3.0.7] - 07-11-2024
 
 ### Changed
@@ -133,6 +140,8 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - switched to `pathlib` for file path parsing
 
+[3.0.8]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.7...3.0.8
+[3.0.7]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.6...3.0.7
 [3.0.6]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.5...3.0.6
 [3.0.5]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.3...3.0.4
