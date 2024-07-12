@@ -45,7 +45,7 @@ def test_use_existing_fail(capsys, default_file_output):
 def test_not_use_existing(capsys, default_file_output):
     customize.create_model(CHANNEL_ID, USER, use_existing=False)
     stdout = capsys.readouterr()
-    assert "INFO: Parsing chat logs into an openAI compatible dataset..." in stdout.out
+    assert "INFO: Parsing chat logs into an OpenAI compatible dataset..." in stdout.out
 
 
 def test_not_use_existing_dirty(capsys, default_file_output):
