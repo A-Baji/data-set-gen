@@ -2,6 +2,12 @@
 
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
+## [3.0.11] - 07-16-2024
+
+### Fixed
+
+- remove `.identifier` files
+
 ## [3.0.10] - 07-16-2024
 
 ### Fixed
@@ -152,6 +158,7 @@ Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 
 - switched to `pathlib` for file path parsing
 
+[3.0.11]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.10...3.0.11
 [3.0.10]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.9...3.0.10
 [3.0.9]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.8...3.0.9
 [3.0.8]: https://github.com/A-Baji/discordAI-modelizer/compare/3.0.7...3.0.8
