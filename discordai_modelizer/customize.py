@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 import appdirs
 import shutil
@@ -11,6 +12,23 @@ MODEL_MAP = {
     "davinci": "davinci-002",
     "babbage": "babbage-002",
 }
+
+
+def get_dce_path_and_exe():
+    os_name = platform.system()
+
+    if os_name == "Linux":
+        return pathlib.Path(
+            "DiscordChatExporter.Cli.linux-x64", "DiscordChatExporter.Cli"
+        )
+    elif os_name == "Darwin":
+        return pathlib.Path(
+            "DiscordChatExporter.Cli.osx-x64", "DiscordChatExporter.Cli"
+        )
+    elif os_name == "Windows":
+        return pathlib.Path(
+            "DiscordChatExporter.Cli.win-x64", "DiscordChatExporter.Cli.exe"
+        )
 
 
 def create_model(
@@ -53,7 +71,7 @@ def create_model(
         DiscordChatExporter = (
             pathlib.Path(os.path.dirname(__file__))
             / "DiscordChatExporter"
-            / "DiscordChatExporter.Cli"
+            / get_dce_path_and_exe()
         )
         subprocess.run(
             [

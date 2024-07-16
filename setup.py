@@ -1,3 +1,4 @@
+import platform
 import setuptools
 import pathlib
 import sys
@@ -16,6 +17,18 @@ here = pathlib.Path(__file__).parent.resolve()
 with open(pathlib.Path(here, "requirements.txt")) as f:
     requirements = [r for r in f.read().splitlines()]
 
+
+def get_dce_path():
+    os_name = platform.system()
+
+    if os_name == "Linux":
+        return "DiscordChatExporter.Cli.linux-x64"
+    elif os_name == "Darwin":
+        return "DiscordChatExporter.Cli.osx-x64"
+    elif os_name == "Windows":
+        return "DiscordChatExporter.Cli.win-x64"
+
+
 setuptools.setup(
     name=package.__name__,
     version=package.__version__,
@@ -26,6 +39,8 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/A-Baji/discordAI-modelizer",
     packages=setuptools.find_packages(),
+    package_dir={"": "."},
+    package_data={"": [f"DiscordChatExporter/{get_dce_path()}/*"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
@@ -36,8 +51,6 @@ setuptools.setup(
             f"{package.__name__}={package.__name__}.command_line.command_line:{package.__name__}"
         ],
     },
-    package_data={package.__name__: ["DiscordChatExporter/*"]},
-    include_package_data=True,
     install_requires=requirements,
     python_requires="~={}.{}".format(*min_py_version),
 )
