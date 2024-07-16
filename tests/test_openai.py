@@ -6,24 +6,26 @@ from .conftest import list_dict_comp
 
 def test_model_list():
     models = openai_wrapper.list_models()
-    for o in expected_values.list_module_expected:
-        assert o in models
+    for o in models:
+        assert o in expected_values.list_module_expected
 
 
 def test_model_list_full():
     models = openai_wrapper.list_models(full=True)
-    for o in expected_values.list_module_expected_full:
-        assert o in models
+    for o in models:
+        assert o in expected_values.list_module_expected_full
 
 
 def test_job_list():
     jobs = openai_wrapper.list_jobs()
-    list_dict_comp(expected_values.list_job_expected, jobs)
+    for o in jobs:
+        assert o in expected_values.list_job_expected
 
 
 def test_job_list_full():
     jobs = openai_wrapper.list_jobs(full=True)
-    list_dict_comp(expected_values.list_job_expected_full, jobs)
+    for o in jobs:
+        assert o in expected_values.list_job_expected_full
 
 
 def test_job_info():
